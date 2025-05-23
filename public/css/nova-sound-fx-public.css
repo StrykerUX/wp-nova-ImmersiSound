@@ -1,0 +1,196 @@
+/**
+ * Nova Sound FX Public Styles
+ */
+
+/* Audio preload container (hidden) */
+.nova-sound-fx-preload {
+    position: absolute;
+    left: -9999px;
+    visibility: hidden;
+}
+
+/* Sound effect indicators */
+.nova-sound-fx-active {
+    position: relative;
+}
+
+.nova-sound-fx-active::after {
+    content: '🔊';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nova-sound-fx-active:hover::after {
+    opacity: 0.5;
+}
+
+/* Loading state for sounds */
+.nova-sound-loading {
+    cursor: wait !important;
+}
+
+/* Visual feedback for sound playback */
+@keyframes nova-sound-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
+}
+
+.nova-sound-playing {
+    animation: nova-sound-pulse 0.5s ease-out;
+}
+
+/* Page transition overlay */
+.nova-page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.nova-page-transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Sound wave animation for visual feedback */
+.nova-sound-wave {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    display: none;
+    z-index: 9999;
+}
+
+.nova-sound-wave.active {
+    display: block;
+}
+
+.nova-sound-wave span {
+    display: inline-block;
+    width: 3px;
+    height: 100%;
+    background: #007cba;
+    margin: 0 2px;
+    animation: nova-wave 1s ease-in-out infinite;
+}
+
+.nova-sound-wave span:nth-child(2) {
+    animation-delay: -0.9s;
+}
+
+.nova-sound-wave span:nth-child(3) {
+    animation-delay: -0.8s;
+}
+
+.nova-sound-wave span:nth-child(4) {
+    animation-delay: -0.7s;
+}
+
+.nova-sound-wave span:nth-child(5) {
+    animation-delay: -0.6s;
+}
+
+@keyframes nova-wave {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1);
+    }
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .nova-sound-fx-active::after,
+    .nova-sound-playing,
+    .nova-page-transition-overlay,
+    .nova-sound-wave {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .nova-sound-wave {
+        bottom: 10px;
+        left: 10px;
+        width: 30px;
+        height: 30px;
+    }
+    
+    .nova-sound-wave span {
+        width: 2px;
+        margin: 0 1px;
+    }
+}
+
+/* Debug mode styles */
+body.nova-sound-fx-debug .nova-sound-fx-active {
+    outline: 2px dashed #007cba !important;
+}
+
+body.nova-sound-fx-debug .nova-sound-fx-active::before {
+    content: attr(data-nova-sound-event);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: 10px;
+    background: #007cba;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 9999;
+}
+
+/* Sound control widget animations */
+.nova-controls-enter {
+    animation: nova-controls-enter 0.3s ease-out;
+}
+
+@keyframes nova-controls-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Focus styles for accessibility */
+.nova-sound-fx-active:focus {
+    outline: 2px solid #007cba;
+    outline-offset: 2px;
+}
+
+/* Print styles - hide sound indicators */
+@media print {
+    .nova-sound-fx-active::after,
+    .nova-sound-wave,
+    .nova-sound-fx-controls,
+    .nova-page-transition-overlay {
+        display: none !important;
+    }
+}

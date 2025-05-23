@@ -1,0 +1,56 @@
+# WordPress
+*.log
+wp-config.php
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/mu-plugins/
+wp-content/wp-cache-config.php
+wp-content/plugins/hello.php
+
+# Development
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.idea
+.vscode
+*.code-workspace
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+.env.*
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build files
+/build/
+/dist/
+*.zip
+*.tar.gz
+
+# Testing
+/tests/coverage/
+phpunit.xml
+.phpunit.result.cache
+
+# Composer
+/vendor/
+composer.lock
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

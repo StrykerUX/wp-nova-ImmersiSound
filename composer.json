@@ -1,0 +1,36 @@
+{
+    "name": "nova/nova-sound-fx",
+    "description": "Add immersive sound effects to your WordPress website with CSS selectors and page transitions",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your-email@example.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0",
+        "wp-coding-standards/wpcs": "^2.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-cs": "phpcs",
+        "fix-cs": "phpcbf"
+    },
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": ["type:wordpress-plugin"]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

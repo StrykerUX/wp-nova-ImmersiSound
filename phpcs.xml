@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ruleset name="Nova Sound FX">
+    <description>WordPress Coding Standards for Nova Sound FX plugin</description>
+
+    <!-- What to scan -->
+    <file>.</file>
+    
+    <!-- Exclude paths -->
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <exclude-pattern>*/build/*</exclude-pattern>
+    <exclude-pattern>*/dist/*</exclude-pattern>
+    <exclude-pattern>*.min.js</exclude-pattern>
+    <exclude-pattern>*.min.css</exclude-pattern>
+
+    <!-- How to scan -->
+    <arg value="sp"/> <!-- Show sniff and progress -->
+    <arg name="basepath" value="./"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/>
+
+    <!-- Rules: Check PHP version compatibility -->
+    <config name="testVersion" value="5.6-"/>
+    
+    <!-- WordPress Coding Standards -->
+    <rule ref="WordPress">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        
+        <!-- Allow helpful comments -->
+        <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+        
+        <!-- Allow some flexibility in formatting -->
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+    </rule>
+
+    <!-- WordPress Core Standards -->
+    <rule ref="WordPress-Core"/>
+    
+    <!-- WordPress Documentation Standards -->
+    <rule ref="WordPress-Docs"/>
+    
+    <!-- WordPress Extra Standards -->
+    <rule ref="WordPress-Extra"/>
+
+    <!-- Set text domain -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="nova-sound-fx"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Verify that the prefix is used -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="nova_sound_fx"/>
+                <element value="Nova_Sound_FX"/>
+                <element value="NOVA_SOUND_FX"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>
