@@ -34,14 +34,19 @@ function nova_sound_fx_activate() {
         'enable_sounds' => true,
         'default_volume' => 50,
         'mobile_enabled' => false,
-        'respect_prefers_reduced_motion' => true
+        'respect_prefers_reduced_motion' => true,
+        'preview_mode' => false
     ));
+    
+    // Flush rewrite rules to prevent URL conflicts
+    flush_rewrite_rules();
 }
 
 // Deactivation hook
 register_deactivation_hook(__FILE__, 'nova_sound_fx_deactivate');
 function nova_sound_fx_deactivate() {
     // Clean up temporary data
+    flush_rewrite_rules();
 }
 
 // Create database tables

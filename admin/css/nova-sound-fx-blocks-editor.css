@@ -2,148 +2,234 @@
  * Nova Sound FX Block Editor Styles
  */
 
-/* Sound Button Block */
-.wp-block-nova-sound-fx-sound-button {
-    margin: 20px 0;
-}
-
-.wp-block-nova-sound-fx-sound-button input[type="text"] {
-    font-size: 14px;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.wp-block-nova-sound-fx-sound-button .wp-block-button__link {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.wp-block-nova-sound-fx-sound-button .wp-block-button__link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-/* Sound Controls Block */
-.wp-block-nova-sound-fx-sound-controls {
-    margin: 20px 0;
-}
-
-.wp-block-nova-sound-fx-sound-controls > div {
-    border: 2px dashed #007cba;
-}
-
-/* Inspector Controls */
-.components-panel__body .nova-sound-preview-button {
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* Block Icons */
-.editor-block-icon.block-editor-block-icon svg {
-    fill: #007cba;
-}
-
-/* Placeholder Styles */
-.nova-sound-fx-placeholder {
-    padding: 40px;
+/* Preview de controles */
+.nova-sound-fx-controls-preview {
+    padding: 20px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
     text-align: center;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background: #f9f9f9;
 }
 
-.nova-sound-fx-placeholder h3 {
-    margin: 0 0 10px 0;
-    font-size: 16px;
-    font-weight: 600;
+.nova-preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #007cba;
+    color: white;
+    border-radius: 25px;
+    font-weight: 500;
+    margin-bottom: 12px;
 }
 
-.nova-sound-fx-placeholder p {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
+.nova-preview-badge .dashicons {
+    font-size: 20px;
 }
 
-/* Alignment */
-.wp-block-nova-sound-fx-sound-button.alignleft {
-    text-align: left;
+.nova-preview-badge.nova-preview-floating {
+    background: #2271b1;
+    border-radius: 12px;
 }
 
-.wp-block-nova-sound-fx-sound-button.aligncenter {
-    text-align: center;
+.nova-preview-badge.nova-preview-embedded {
+    background: #757575;
+    border-radius: 8px;
 }
 
-.wp-block-nova-sound-fx-sound-button.alignright {
-    text-align: right;
-}
-
-/* Block Toolbar */
-.block-editor-block-toolbar .components-toolbar-button {
-    padding: 8px;
-}
-
-/* Sound Selection Dropdown */
-.components-select-control__input option[value="0"] {
+.nova-preview-info {
+    color: #757575;
     font-style: italic;
-    color: #999;
+    margin: 0;
 }
 
-/* Volume Control */
-.components-range-control__number {
-    width: 60px;
+/* Preview de botón con sonido */
+.nova-sound-button-preview {
+    position: relative;
 }
 
-/* Dark Theme Support */
-.is-dark-theme .wp-block-nova-sound-fx-sound-button input[type="text"],
-.is-dark-theme .wp-block-nova-sound-fx-sound-controls > div {
-    border-color: #555;
-    background-color: #2d2d2d;
-    color: #fff;
+.nova-sound-button-preview .nova-sound-indicator {
+    display: inline-block;
+    animation: novaPulse 2s ease-in-out infinite;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-    .wp-block-nova-sound-fx-sound-button input[type="text"] {
-        font-size: 16px; /* Prevent zoom on iOS */
-    }
-}
-
-/* Animation for preview */
-@keyframes nova-sound-pulse {
-    0% {
-        transform: scale(1);
+@keyframes novaPulse {
+    0%, 100% {
+        opacity: 0.6;
     }
     50% {
-        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+/* Estilos del botón en el editor */
+.nova-sound-button-preview .wp-block-button__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nova-sound-button-preview .wp-block-button__link.is-style-primary {
+    background: #007cba;
+    color: white;
+}
+
+.nova-sound-button-preview .wp-block-button__link.is-style-secondary {
+    background: #f0f0f0;
+    color: #1e1e1e;
+}
+
+.nova-sound-button-preview .wp-block-button__link.is-style-outline {
+    background: transparent;
+    border: 2px solid #007cba;
+    color: #007cba;
+}
+
+.nova-sound-button-preview .wp-block-button__link.is-style-text {
+    background: transparent;
+    color: #007cba;
+    text-decoration: underline;
+    padding: 0;
+}
+
+/* Inspector controls personalizados */
+.components-panel__body .components-button.is-secondary {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Mejoras visuales para el selector de sonido */
+.components-select-control__input option[value="0"] {
+    font-style: italic;
+    color: #757575;
+}
+
+/* Estado cuando no hay sonido seleccionado */
+.nova-sound-button-preview button:not(.has-sound) {
+    opacity: 0.7;
+}
+
+/* Indicador de configuración incompleta */
+.wp-block-nova-sound-fx-sound-button.needs-configuration {
+    border: 2px dashed #f0b849;
+    padding: 10px;
+}
+
+.wp-block-nova-sound-fx-sound-button.needs-configuration::before {
+    content: '⚠️ ' attr(data-message);
+    display: block;
+    color: #f0b849;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+/* Toolbar personalizada */
+.block-editor-block-toolbar .components-toolbar-button[aria-label*="Preview Sound"] {
+    position: relative;
+}
+
+.block-editor-block-toolbar .components-toolbar-button[aria-label*="Preview Sound"]:not(:disabled):hover {
+    color: #007cba;
+}
+
+/* Estados del bloque */
+.wp-block-nova-sound-fx-controls {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wp-block-nova-sound-fx-sound-button {
+    display: inline-block;
+}
+
+/* Ayudas visuales en el editor */
+.editor-styles-wrapper .nova-sound-fx-active {
+    outline: 2px dashed #007cba;
+    outline-offset: 4px;
+}
+
+/* Placeholder cuando se está arrastrando */
+.wp-block-nova-sound-fx-controls.is-drop-target,
+.wp-block-nova-sound-fx-sound-button.is-drop-target {
+    background: rgba(0, 124, 186, 0.1);
+}
+
+/* Mensaje de ayuda */
+.nova-sound-fx-help-message {
+    background: #e7f4ff;
+    border-left: 4px solid #007cba;
+    padding: 12px;
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.nova-sound-fx-help-message .dashicons {
+    color: #007cba;
+    margin-right: 8px;
+}
+
+/* Responsive en el editor */
+@media (max-width: 600px) {
+    .nova-sound-fx-controls-preview {
+        padding: 15px;
+    }
+    
+    .nova-preview-badge {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+}
+
+/* Integración con temas de bloques */
+.editor-styles-wrapper .wp-block-nova-sound-fx-sound-button button {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* Animación de guardado */
+@keyframes novaSaving {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
     }
     100% {
-        transform: scale(1);
+        opacity: 1;
     }
 }
 
-.nova-sound-playing {
-    animation: nova-sound-pulse 0.3s ease;
+.wp-block-nova-sound-fx-controls.is-saving,
+.wp-block-nova-sound-fx-sound-button.is-saving {
+    animation: novaSaving 1s ease-in-out infinite;
 }
 
-/* Help text */
-.nova-help-text {
-    font-size: 12px;
-    font-style: italic;
-    color: #666;
-    margin-top: 8px;
+/* Compatibilidad con diferentes editores */
+.block-editor-block-list__block[data-type="nova-sound-fx/controls"],
+.block-editor-block-list__block[data-type="nova-sound-fx/sound-button"] {
+    margin-top: 28px;
+    margin-bottom: 28px;
 }
 
-/* Error states */
-.nova-error {
-    color: #d94f4f;
-    font-size: 12px;
-    margin-top: 5px;
+/* Icono personalizado en la lista de bloques */
+.block-editor-block-types-list__item-icon svg {
+    fill: currentColor;
 }
 
-/* Success states */
-.nova-success {
-    color: #4ab866;
-    font-size: 12px;
-    margin-top: 5px;
+/* Vista previa en el inserter */
+.block-editor-block-preview__content .wp-block-nova-sound-fx-controls,
+.block-editor-block-preview__content .wp-block-nova-sound-fx-sound-button {
+    transform: scale(0.9);
+}
+
+/* Estilos para el modo oscuro del editor */
+.is-dark-theme .nova-sound-fx-controls-preview {
+    background: #2d2d2d;
+    border-color: #555;
+}
+
+.is-dark-theme .nova-preview-info {
+    color: #ccc;
 }

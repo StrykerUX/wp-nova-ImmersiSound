@@ -1,122 +1,42 @@
 /**
  * Nova Sound FX Gutenberg Blocks
  */
-(function (blocks, element, components, editor, i18n) {
+(function(blocks, element, components, editor, i18n) {
     const el = element.createElement;
     const { registerBlockType } = blocks;
-    const { Button, PanelBody, RangeControl, SelectControl, ToggleControl } = components;
-    const { InspectorControls, BlockControls, AlignmentToolbar } = editor;
+    const { InspectorControls, BlockControls } = editor;
+    const { 
+        PanelBody, 
+        SelectControl, 
+        ToggleControl, 
+        RangeControl,
+        TextControl,
+        Button,
+        ToolbarGroup,
+        ToolbarButton
+    } = components;
     const { __ } = i18n;
 
-    // Sound Button Block
-    registerBlockType('nova-sound-fx/sound-button', {
-        title: __('Sound Button', 'nova-sound-fx'),
-        description: __('A button that plays a sound when clicked', 'nova-sound-fx'),
-        icon: 'controls-volumeon',
-        category: 'common',
-        attributes: {
-            text: {
-                type: 'string',
-                default: 'Click me!'
-            },
-            soundId: {
-                type: 'number',
-                default: 0
-            },
-            volume: {
-                type: 'number',
-                default: 100
-            },
-            align: {
-                type: 'string',
-                default: 'none'
-            }
-        },
+    // Icono del plugin
+    const novaSoundIcon = el('svg', { 
+        width: 24, 
+        height: 24, 
+        viewBox: '0 0 24 24' 
+    },
+        el('path', {
+            d: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
+            fill: 'currentColor'
+        })
+    );
 
-        edit: function (props) {
-            const { attributes, setAttributes, className } = props;
-            const { text, soundId, volume, align } = attributes;
-
-            // Prepare sound options
-            const soundOptions = [
-                { value: 0, label: __('Select a sound', 'nova-sound-fx') }
-            ];
-            
-            if (window.novaSoundFXBlocks && window.novaSoundFXBlocks.sounds) {
-                soundOptions.push(...window.novaSoundFXBlocks.sounds);
-            }
-
-            // Find selected sound URL
-            const selectedSound = soundOptions.find(sound => sound.value === soundId);
-            const soundUrl = selectedSound ? selectedSound.url : '';
-
-            // Play preview sound
-            const playPreview = () => {
-                if (soundUrl) {
-                    const audio = new Audio(soundUrl);
-                    audio.volume = volume / 100;
-                    audio.play();
-                }
-            };
-
-            return [
-                el(InspectorControls, {},
-                    el(PanelBody, { title: __('Sound Settings', 'nova-sound-fx') },
-                        el(SelectControl, {
-                            label: __('Sound Effect', 'nova-sound-fx'),
-                            value: soundId,
-                            options: soundOptions,
-                            onChange: (value) => setAttributes({ soundId: parseInt(value) })
-                        }),
-                        el(RangeControl, {
-                            label: __('Volume', 'nova-sound-fx'),
-                            value: volume,
-                            onChange: (value) => setAttributes({ volume: value }),
-                            min: 0,
-                            max: 100
-                        }),
-                        soundId > 0 && el(Button, {
-                            isPrimary: true,
-                            onClick: playPreview
-                        }, __('Preview Sound', 'nova-sound-fx'))
-                    )
-                ),
-                el(BlockControls, {},
-                    el(AlignmentToolbar, {
-                        value: align,
-                        onChange: (value) => setAttributes({ align: value })
-                    })
-                ),
-                el('div', { className: className },
-                    el('div', { className: 'wp-block-button' + (align ? ' align' + align : '') },
-                        el('button', {
-                            className: 'wp-block-button__link',
-                            onClick: playPreview
-                        }, text)
-                    ),
-                    el('input', {
-                        type: 'text',
-                        value: text,
-                        onChange: (e) => setAttributes({ text: e.target.value }),
-                        placeholder: __('Button text...', 'nova-sound-fx'),
-                        style: { marginTop: '10px', width: '100%' }
-                    })
-                )
-            ];
-        },
-
-        save: function () {
-            // Rendered by PHP
-            return null;
-        }
-    });
-
-    // Sound Controls Block
-    registerBlockType('nova-sound-fx/sound-controls', {
-        title: __('Sound Controls', 'nova-sound-fx'),
-        description: __('User controls for sound effects', 'nova-sound-fx'),
-        icon: 'admin-settings',
-        category: 'common',
+    /**
+     * Bloque de Controles de Sonido
+     */
+    registerBlockType('nova-sound-fx/controls', {
+        title: __('Nova Sound FX Controls', 'nova-sound-fx'),
+        description: __('Add sound controls widget to your page', 'nova-sound-fx'),
+        icon: novaSoundIcon,
+        category: 'widgets',
         attributes: {
             style: {
                 type: 'string',
@@ -124,7 +44,7 @@
             },
             position: {
                 type: 'string',
-                default: 'inline'
+                default: 'bottom-right'
             },
             theme: {
                 type: 'string',
@@ -140,52 +60,49 @@
             }
         },
 
-        edit: function (props) {
-            const { attributes, setAttributes, className } = props;
+        edit: function(props) {
+            const { attributes, setAttributes } = props;
             const { style, position, theme, showVolume, showSave } = attributes;
-
-            const styleOptions = [
-                { value: 'minimal', label: __('Minimal', 'nova-sound-fx') },
-                { value: 'floating', label: __('Floating', 'nova-sound-fx') },
-                { value: 'embedded', label: __('Embedded', 'nova-sound-fx') }
-            ];
-
-            const positionOptions = [
-                { value: 'inline', label: __('Inline', 'nova-sound-fx') },
-                { value: 'top-left', label: __('Top Left', 'nova-sound-fx') },
-                { value: 'top-right', label: __('Top Right', 'nova-sound-fx') },
-                { value: 'bottom-left', label: __('Bottom Left', 'nova-sound-fx') },
-                { value: 'bottom-right', label: __('Bottom Right', 'nova-sound-fx') }
-            ];
-
-            const themeOptions = [
-                { value: 'light', label: __('Light', 'nova-sound-fx') },
-                { value: 'dark', label: __('Dark', 'nova-sound-fx') }
-            ];
 
             return [
                 el(InspectorControls, {},
-                    el(PanelBody, { title: __('Control Settings', 'nova-sound-fx') },
+                    el(PanelBody, { 
+                        title: __('Control Settings', 'nova-sound-fx'),
+                        initialOpen: true 
+                    },
                         el(SelectControl, {
                             label: __('Style', 'nova-sound-fx'),
                             value: style,
-                            options: styleOptions,
+                            options: [
+                                { label: __('Minimal', 'nova-sound-fx'), value: 'minimal' },
+                                { label: __('Floating', 'nova-sound-fx'), value: 'floating' },
+                                { label: __('Embedded', 'nova-sound-fx'), value: 'embedded' }
+                            ],
                             onChange: (value) => setAttributes({ style: value })
                         }),
                         el(SelectControl, {
                             label: __('Position', 'nova-sound-fx'),
                             value: position,
-                            options: positionOptions,
-                            onChange: (value) => setAttributes({ position: value })
+                            options: [
+                                { label: __('Top Left', 'nova-sound-fx'), value: 'top-left' },
+                                { label: __('Top Right', 'nova-sound-fx'), value: 'top-right' },
+                                { label: __('Bottom Left', 'nova-sound-fx'), value: 'bottom-left' },
+                                { label: __('Bottom Right', 'nova-sound-fx'), value: 'bottom-right' }
+                            ],
+                            onChange: (value) => setAttributes({ position: value }),
+                            help: style === 'embedded' ? __('Position is ignored for embedded style', 'nova-sound-fx') : ''
                         }),
                         el(SelectControl, {
                             label: __('Theme', 'nova-sound-fx'),
                             value: theme,
-                            options: themeOptions,
+                            options: [
+                                { label: __('Light', 'nova-sound-fx'), value: 'light' },
+                                { label: __('Dark', 'nova-sound-fx'), value: 'dark' }
+                            ],
                             onChange: (value) => setAttributes({ theme: value })
                         }),
                         el(ToggleControl, {
-                            label: __('Show Volume Control', 'nova-sound-fx'),
+                            label: __('Show Volume Slider', 'nova-sound-fx'),
                             checked: showVolume,
                             onChange: (value) => setAttributes({ showVolume: value })
                         }),
@@ -196,28 +113,169 @@
                         })
                     )
                 ),
-                el('div', { className: className },
+                el('div', { className: 'nova-sound-fx-controls-preview' },
                     el('div', { 
-                        style: { 
-                            padding: '20px', 
-                            backgroundColor: '#f0f0f0', 
-                            textAlign: 'center',
-                            borderRadius: '5px'
-                        } 
+                        className: `nova-preview-badge nova-preview-${style}` 
                     },
-                        el('p', {}, __('Sound Controls Widget', 'nova-sound-fx')),
-                        el('p', { style: { fontSize: '12px', marginTop: '5px' } }, 
-                            __('Style: ', 'nova-sound-fx') + style + ' | ' +
-                            __('Position: ', 'nova-sound-fx') + position + ' | ' +
-                            __('Theme: ', 'nova-sound-fx') + theme
-                        )
+                        el('span', { className: 'dashicons dashicons-format-audio' }),
+                        el('span', {}, __('Nova Sound FX Controls', 'nova-sound-fx'))
+                    ),
+                    el('p', { className: 'nova-preview-info' }, 
+                        __('The sound controls will appear here in the frontend.', 'nova-sound-fx')
                     )
                 )
             ];
         },
 
-        save: function () {
-            // Rendered by PHP
+        save: function() {
+            // El renderizado se hace en PHP
+            return null;
+        }
+    });
+
+    /**
+     * Bloque de Botón con Sonido
+     */
+    registerBlockType('nova-sound-fx/sound-button', {
+        title: __('Sound Button', 'nova-sound-fx'),
+        description: __('A button that plays a sound effect', 'nova-sound-fx'),
+        icon: novaSoundIcon,
+        category: 'widgets',
+        attributes: {
+            text: {
+                type: 'string',
+                default: 'Click me!'
+            },
+            soundId: {
+                type: 'number',
+                default: 0
+            },
+            eventType: {
+                type: 'string',
+                default: 'click'
+            },
+            volume: {
+                type: 'number',
+                default: 100
+            },
+            className: {
+                type: 'string',
+                default: ''
+            },
+            buttonStyle: {
+                type: 'string',
+                default: 'primary'
+            }
+        },
+
+        edit: function(props) {
+            const { attributes, setAttributes } = props;
+            const { text, soundId, eventType, volume, className, buttonStyle } = attributes;
+
+            // Función para reproducir sonido de vista previa
+            const playPreviewSound = () => {
+                const sound = novaSoundFXBlocks.sounds.find(s => s.value === soundId);
+                if (sound && sound.url) {
+                    const audio = new Audio(sound.url);
+                    audio.volume = volume / 100;
+                    audio.play().catch(e => console.error('Preview play failed:', e));
+                }
+            };
+
+            return [
+                el(InspectorControls, {},
+                    el(PanelBody, { 
+                        title: __('Button Settings', 'nova-sound-fx'),
+                        initialOpen: true 
+                    },
+                        el(TextControl, {
+                            label: __('Button Text', 'nova-sound-fx'),
+                            value: text,
+                            onChange: (value) => setAttributes({ text: value })
+                        }),
+                        el(SelectControl, {
+                            label: __('Button Style', 'nova-sound-fx'),
+                            value: buttonStyle,
+                            options: [
+                                { label: __('Primary', 'nova-sound-fx'), value: 'primary' },
+                                { label: __('Secondary', 'nova-sound-fx'), value: 'secondary' },
+                                { label: __('Outline', 'nova-sound-fx'), value: 'outline' },
+                                { label: __('Text', 'nova-sound-fx'), value: 'text' }
+                            ],
+                            onChange: (value) => setAttributes({ buttonStyle: value })
+                        }),
+                        el(TextControl, {
+                            label: __('Additional CSS Class', 'nova-sound-fx'),
+                            value: className,
+                            onChange: (value) => setAttributes({ className: value })
+                        })
+                    ),
+                    el(PanelBody, { 
+                        title: __('Sound Settings', 'nova-sound-fx'),
+                        initialOpen: true 
+                    },
+                        el(SelectControl, {
+                            label: __('Sound Effect', 'nova-sound-fx'),
+                            value: soundId,
+                            options: [
+                                { label: __('— Select Sound —', 'nova-sound-fx'), value: 0 },
+                                ...novaSoundFXBlocks.sounds
+                            ],
+                            onChange: (value) => setAttributes({ soundId: parseInt(value) })
+                        }),
+                        soundId > 0 && el(Button, {
+                            isSecondary: true,
+                            onClick: playPreviewSound,
+                            style: { marginBottom: '10px' }
+                        }, __('Preview Sound', 'nova-sound-fx')),
+                        el(SelectControl, {
+                            label: __('Trigger Event', 'nova-sound-fx'),
+                            value: eventType,
+                            options: Object.entries(novaSoundFXBlocks.eventTypes).map(([value, label]) => ({
+                                value,
+                                label
+                            })),
+                            onChange: (value) => setAttributes({ eventType: value })
+                        }),
+                        el(RangeControl, {
+                            label: __('Volume', 'nova-sound-fx'),
+                            value: volume,
+                            onChange: (value) => setAttributes({ volume: value }),
+                            min: 0,
+                            max: 100,
+                            help: __('Adjust the volume for this sound effect', 'nova-sound-fx')
+                        })
+                    )
+                ),
+                el(BlockControls, {},
+                    el(ToolbarGroup, {},
+                        el(ToolbarButton, {
+                            icon: 'controls-play',
+                            title: __('Preview Sound', 'nova-sound-fx'),
+                            onClick: playPreviewSound,
+                            isDisabled: soundId === 0
+                        })
+                    )
+                ),
+                el('div', { 
+                    className: 'wp-block-button nova-sound-button-preview' 
+                },
+                    el('button', {
+                        className: `wp-block-button__link is-style-${buttonStyle} ${className}`,
+                        type: 'button'
+                    }, 
+                        text,
+                        soundId > 0 && el('span', { 
+                            className: 'nova-sound-indicator',
+                            style: { marginLeft: '8px' }
+                        }, '🔊')
+                    )
+                )
+            ];
+        },
+
+        save: function() {
+            // El renderizado se hace en PHP
             return null;
         }
     });
@@ -226,6 +284,6 @@
     window.wp.blocks,
     window.wp.element,
     window.wp.components,
-    window.wp.editor,
+    window.wp.blockEditor || window.wp.editor,
     window.wp.i18n
 );

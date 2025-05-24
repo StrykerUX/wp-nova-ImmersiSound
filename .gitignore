@@ -1,32 +1,36 @@
 # WordPress
-*.log
 wp-config.php
-wp-content/advanced-cache.php
-wp-content/backup-db/
-wp-content/backups/
-wp-content/blogs.dir/
-wp-content/cache/
-wp-content/upgrade/
 wp-content/uploads/
-wp-content/mu-plugins/
+wp-content/blogs.dir/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/advanced-cache.php
 wp-content/wp-cache-config.php
-wp-content/plugins/hello.php
+sitemap.xml
+*.log
+.htaccess
 
 # Development
-.DS_Store
-Thumbs.db
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+yarn.lock
+.sass-cache/
+*.map
+
+# IDE
+.vscode/
+.idea/
 *.sublime-project
 *.sublime-workspace
-.idea
-.vscode
-*.code-workspace
-node_modules/
-npm-debug.log
-yarn-error.log
-.env
-.env.*
+.project
+.settings/
+*.tmproj
+*.tmproject
+tmtags
 
-# OS Files
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -34,23 +38,35 @@ yarn-error.log
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
+
+# Plugin specific
+/nova-sound-fx-cache/
+/logs/
+/temp/
+*.bak
+*.tmp
 
 # Build files
 /build/
 /dist/
-*.zip
-*.tar.gz
+/compiled/
 
 # Testing
 /tests/coverage/
 phpunit.xml
 .phpunit.result.cache
 
-# Composer
-/vendor/
-composer.lock
+# Documentation build
+/docs/_build/
+/docs/_static/
+/docs/_templates/
 
-# Package managers
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Debug
+debug.log
+error_log

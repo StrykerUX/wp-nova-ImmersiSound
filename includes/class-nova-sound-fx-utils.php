@@ -5,113 +5,53 @@
 class Nova_Sound_FX_Utils {
     
     /**
-     * Get all supported audio mime types
-     */
-    public static function get_supported_mime_types() {
-        return array(
-            'audio/mpeg',
-            'audio/mp3',
-            'audio/wav',
-            'audio/wave',
-            'audio/x-wav',
-            'audio/ogg',
-            'audio/webm'
-        );
-    }
-    
-    /**
      * Validate CSS selector
+     * Only allow class and ID selectors
      */
-    public static function is_valid_css_selector($selector) {
-        // Basic validation - could be expanded
-        if (empty($selector)) {
-            return false;
-        }
+    public static function validate_css_selector($selector) {
+        // Remove whitespace
+        $selector = trim($selector);
         
-        // Check for common invalid patterns
-        $invalid_patterns = array(
-            '/^[0-9]/',          // Starts with number
-            '/[\x00-\x1F\x7F]/', // Control characters
-            '/<script/i',        // Script tags
-            '/javascript:/i',     // JavaScript protocol
-        );
+        // Check if it's a valid class or ID selector
+        $pattern = '/^[#.][\w-]+(\s*,\s*[#.][\w-]+)*$/';
         
-        foreach ($invalid_patterns as $pattern) {
-            if (preg_match($pattern, $selector)) {
-                return false;
-            }
-        }
-        
-        return true;
+        return preg_match($pattern, $selector);
     }
     
     /**
-     * Validate URL pattern
+     * Sanitize CSS selector
      */
-    public static function is_valid_url_pattern($pattern) {
-        if (empty($pattern)) {
-            return false;
-        }
+    public static function sanitize_css_selector($selector) {
+        // Remove any potentially harmful characters
+        $selector = wp_strip_all_tags($selector);
+        $selector = trim($selector);
         
-        // If it's a regex pattern, validate regex
-        if (strpos($pattern, 'regex:') === 0) {
-            $regex = substr($pattern, 6);
-            return @preg_match('/' . $regex . '/', '') !== false;
-        }
+        // Only allow valid characters for CSS selectors
+        $selector = preg_replace('/[^#.\w\s,-]/', '', $selector);
         
-        return true;
+        return $selector;
     }
     
     /**
-     * Get file size formatted
+     * Get audio file types
      */
-    public static function format_file_size($bytes) {
-        $units = array('B', 'KB', 'MB', 'GB');
-        $i = 0;
-        
-        while ($bytes >= 1024 && $i < count($units) - 1) {
-            $bytes /= 1024;
-            $i++;
-        }
-        
-        return round($bytes, 2) . ' ' . $units[$i];
-    }
-    
-    /**
-     * Get audio file duration
-     */
-    public static function get_audio_duration($file_path) {
-        if (!file_exists($file_path)) {
-            return false;
-        }
-        
-        // This would require additional libraries like getID3
-        // For now, return false
-        return false;
-    }
-    
-    /**
-     * Sanitize volume value
-     */
-    public static function sanitize_volume($volume) {
-        return max(0, min(100, intval($volume)));
-    }
-    
-    /**
-     * Get default sound categories
-     */
-    public static function get_sound_categories() {
+    public static function get_allowed_audio_types() {
         return array(
-            'hover' => __('Hover Effects', 'nova-sound-fx'),
-            'click' => __('Click Effects', 'nova-sound-fx'),
-            'transition' => __('Page Transitions', 'nova-sound-fx'),
-            'notification' => __('Notifications', 'nova-sound-fx'),
-            'ambient' => __('Ambient', 'nova-sound-fx'),
-            'ui' => __('UI Feedback', 'nova-sound-fx'),
-            'error' => __('Error Sounds', 'nova-sound-fx'),
-            'success' => __('Success Sounds', 'nova-sound-fx'),
-            'other' => __('Other', 'nova-sound-fx')
+            'mp3' => 'audio/mpeg',
+            'wav' => 'audio/wav',
+            'ogg' => 'audio/ogg',
+            'm4a' => 'audio/mp4'
         );
+    }
+    
+    /**
+     * Check if file is valid audio
+     */
+    public static function is_valid_audio_file($file_path) {
+        $allowed_types = self::get_allowed_audio_types();
+        $file_type = wp_check_filetype($file_path);
+        
+        return isset($allowed_types[$file_type['ext']]);
     }
     
     /**
@@ -119,101 +59,144 @@ class Nova_Sound_FX_Utils {
      */
     public static function get_event_types() {
         return array(
-            'hover' => __('Hover', 'nova-sound-fx'),
+            'hover' => __('Hover (Pasar el mouse)', 'nova-sound-fx'),
             'click' => __('Click', 'nova-sound-fx'),
-            'focus' => __('Focus', 'nova-sound-fx'),
-            'blur' => __('Blur', 'nova-sound-fx'),
-            'mouseenter' => __('Mouse Enter', 'nova-sound-fx'),
-            'mouseleave' => __('Mouse Leave', 'nova-sound-fx'),
-            'mousedown' => __('Mouse Down', 'nova-sound-fx'),
-            'mouseup' => __('Mouse Up', 'nova-sound-fx'),
-            'change' => __('Change', 'nova-sound-fx'),
-            'submit' => __('Submit', 'nova-sound-fx'),
-            'keydown' => __('Key Down', 'nova-sound-fx'),
-            'keyup' => __('Key Up', 'nova-sound-fx')
+            'active' => __('Active (Click sostenido)', 'nova-sound-fx'),
+            'focus' => __('Focus (Enfocar elemento)', 'nova-sound-fx'),
+            'blur' => __('Blur (Desenfocar elemento)', 'nova-sound-fx'),
+            'mouseenter' => __('Mouse Enter (Entrar con mouse)', 'nova-sound-fx'),
+            'mouseleave' => __('Mouse Leave (Salir con mouse)', 'nova-sound-fx'),
+            'mousedown' => __('Mouse Down (Presionar botón del mouse)', 'nova-sound-fx'),
+            'mouseup' => __('Mouse Up (Soltar botón del mouse)', 'nova-sound-fx')
         );
     }
     
     /**
-     * Get URL pattern examples
+     * Get transition types
      */
-    public static function get_url_pattern_examples() {
+    public static function get_transition_types() {
         return array(
-            '/404' => __('404 error page', 'nova-sound-fx'),
-            '/contact' => __('Contact page', 'nova-sound-fx'),
-            '*/shop/*' => __('All shop pages', 'nova-sound-fx'),
-            '*/product/*' => __('All product pages', 'nova-sound-fx'),
-            'regex:.*\.pdf$' => __('All PDF links', 'nova-sound-fx'),
-            'regex:^/blog/.*' => __('All blog posts', 'nova-sound-fx'),
-            '*' => __('All pages', 'nova-sound-fx')
+            'enter' => __('Entrada de página', 'nova-sound-fx'),
+            'exit' => __('Salida de página', 'nova-sound-fx'),
+            'both' => __('Ambas', 'nova-sound-fx')
         );
     }
     
     /**
-     * Check if browser supports Web Audio API
+     * Format file size
      */
-    public static function browser_supports_web_audio() {
-        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
-            return true; // Assume support if we can't detect
+    public static function format_file_size($bytes) {
+        if ($bytes < 1024) {
+            return $bytes . ' B';
+        } elseif ($bytes < 1048576) {
+            return round($bytes / 1024, 2) . ' KB';
+        } else {
+            return round($bytes / 1048576, 2) . ' MB';
         }
+    }
+    
+    /**
+     * Get sound metadata
+     */
+    public static function get_sound_metadata($attachment_id) {
+        $metadata = wp_get_attachment_metadata($attachment_id);
+        $file_path = get_attached_file($attachment_id);
         
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        
-        // Check for old browsers that don't support Web Audio API
-        $unsupported = array(
-            'MSIE [6-9]',
-            'Android [2-3]',
-            'Safari/[1-8]'
+        $sound_data = array(
+            'id' => $attachment_id,
+            'title' => get_the_title($attachment_id),
+            'url' => wp_get_attachment_url($attachment_id),
+            'mime_type' => get_post_mime_type($attachment_id),
+            'file_size' => filesize($file_path),
+            'formatted_size' => self::format_file_size(filesize($file_path)),
+            'duration' => isset($metadata['length_formatted']) ? $metadata['length_formatted'] : 'N/A',
+            'bitrate' => isset($metadata['bitrate']) ? $metadata['bitrate'] : 'N/A'
         );
         
-        foreach ($unsupported as $pattern) {
-            if (preg_match('/' . $pattern . '/i', $user_agent)) {
-                return false;
-            }
-        }
-        
-        return true;
+        return $sound_data;
     }
     
     /**
-     * Generate unique element ID
-     */
-    public static function generate_unique_id($prefix = 'nova-') {
-        return $prefix . uniqid();
-    }
-    
-    /**
-     * Log debug information
+     * Debug log
      */
     public static function log($message, $type = 'info') {
-        if (!defined('WP_DEBUG') || !WP_DEBUG) {
-            return;
+        if (defined('WP_DEBUG') && WP_DEBUG === true) {
+            error_log('[Nova Sound FX ' . $type . '] ' . print_r($message, true));
         }
-        
-        $log_file = WP_CONTENT_DIR . '/nova-sound-fx-debug.log';
-        $timestamp = current_time('mysql');
-        $log_entry = sprintf("[%s] [%s] %s\n", $timestamp, strtoupper($type), $message);
-        
-        error_log($log_entry, 3, $log_file);
     }
     
     /**
-     * Get plugin asset URL
+     * Check plugin requirements
      */
-    public static function get_asset_url($path) {
-        return NOVA_SOUND_FX_PLUGIN_URL . $path;
+    public static function check_requirements() {
+        $errors = array();
+        
+        // Check PHP version
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $errors[] = sprintf(
+                __('Nova Sound FX requiere PHP 7.0 o superior. Tu versión actual es %s.', 'nova-sound-fx'),
+                PHP_VERSION
+            );
+        }
+        
+        // Check WordPress version
+        if (version_compare(get_bloginfo('version'), '5.0', '<')) {
+            $errors[] = sprintf(
+                __('Nova Sound FX requiere WordPress 5.0 o superior. Tu versión actual es %s.', 'nova-sound-fx'),
+                get_bloginfo('version')
+            );
+        }
+        
+        // Check if JavaScript is enabled
+        if (!wp_script_is('jquery', 'registered')) {
+            $errors[] = __('jQuery no está disponible. Nova Sound FX requiere jQuery para funcionar.', 'nova-sound-fx');
+        }
+        
+        return $errors;
     }
     
     /**
-     * Check if current page is plugin admin page
+     * Get default settings
      */
-    public static function is_plugin_admin_page() {
-        if (!is_admin()) {
-            return false;
+    public static function get_default_settings() {
+        return array(
+            'enable_sounds' => true,
+            'default_volume' => 50,
+            'mobile_enabled' => false,
+            'respect_prefers_reduced_motion' => true,
+            'preview_mode' => false,
+            'show_visual_feedback' => true,
+            'preload_sounds' => true,
+            'max_simultaneous_sounds' => 3
+        );
+    }
+    
+    /**
+     * Validate URL pattern
+     */
+    public static function validate_url_pattern($pattern) {
+        // Check if it's a regex pattern
+        if (strpos($pattern, 'regex:') === 0) {
+            $regex = substr($pattern, 6);
+            // Test if regex is valid
+            return @preg_match('/' . $regex . '/', '') !== false;
         }
         
-        $screen = get_current_screen();
-        return $screen && strpos($screen->id, 'nova-sound-fx') !== false;
+        // For wildcard patterns, just check basic validity
+        return !empty($pattern) && strlen($pattern) <= 255;
+    }
+    
+    /**
+     * Get plugin info
+     */
+    public static function get_plugin_info() {
+        return array(
+            'name' => 'Nova Sound FX',
+            'version' => NOVA_SOUND_FX_VERSION,
+            'author' => 'Tu Nombre',
+            'website' => 'https://tu-sitio.com',
+            'support_email' => 'soporte@tu-sitio.com'
+        );
     }
     
     /**
@@ -222,10 +205,10 @@ class Nova_Sound_FX_Utils {
     public static function export_settings() {
         $export_data = array(
             'version' => NOVA_SOUND_FX_VERSION,
-            'settings' => get_option('nova_sound_fx_settings', array()),
+            'settings' => get_option('nova_sound_fx_settings'),
             'css_mappings' => Nova_Sound_FX::get_css_mappings(),
             'transitions' => Nova_Sound_FX::get_transitions(),
-            'timestamp' => current_time('mysql')
+            'export_date' => current_time('mysql')
         );
         
         return json_encode($export_data, JSON_PRETTY_PRINT);
@@ -238,23 +221,37 @@ class Nova_Sound_FX_Utils {
         $data = json_decode($json_data, true);
         
         if (!$data || !isset($data['version'])) {
-            return new WP_Error('invalid_data', __('Invalid import data', 'nova-sound-fx'));
+            return new WP_Error('invalid_data', __('Datos de importación inválidos', 'nova-sound-fx'));
         }
         
-        // Import settings
+        // Update settings
         if (isset($data['settings'])) {
             update_option('nova_sound_fx_settings', $data['settings']);
         }
         
         // Import CSS mappings
-        if (isset($data['css_mappings']) && is_array($data['css_mappings'])) {
+        if (isset($data['css_mappings'])) {
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'nova_sound_fx_css_mappings';
+            
+            // Clear existing mappings
+            $wpdb->query("TRUNCATE TABLE $table_name");
+            
+            // Insert new mappings
             foreach ($data['css_mappings'] as $mapping) {
                 Nova_Sound_FX::save_css_mapping($mapping);
             }
         }
         
         // Import transitions
-        if (isset($data['transitions']) && is_array($data['transitions'])) {
+        if (isset($data['transitions'])) {
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'nova_sound_fx_transitions';
+            
+            // Clear existing transitions
+            $wpdb->query("TRUNCATE TABLE $table_name");
+            
+            // Insert new transitions
             foreach ($data['transitions'] as $transition) {
                 Nova_Sound_FX::save_transition($transition);
             }

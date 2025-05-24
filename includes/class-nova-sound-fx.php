@@ -38,6 +38,9 @@ class Nova_Sound_FX {
         add_action('wp_ajax_nova_sound_fx_delete_transition', array($this->admin, 'ajax_delete_transition'));
         add_action('wp_ajax_nova_sound_fx_get_sound_library', array($this->admin, 'ajax_get_sound_library'));
         add_action('wp_ajax_nova_sound_fx_save_settings', array($this->admin, 'ajax_save_settings'));
+        add_action('wp_ajax_nova_sound_fx_get_settings', array($this->admin, 'ajax_get_settings'));
+        add_action('wp_ajax_nova_sound_fx_get_css_mappings', array($this->admin, 'ajax_get_css_mappings'));
+        add_action('wp_ajax_nova_sound_fx_get_transitions', array($this->admin, 'ajax_get_transitions'));
     }
     
     private function define_public_hooks() {

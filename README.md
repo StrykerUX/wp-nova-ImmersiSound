@@ -1,181 +1,171 @@
-# Nova Sound FX - WordPress Plugin
+# Nova Sound FX para WordPress
 
-Add immersive sound effects to your WordPress website with CSS selectors and page transitions.
+[![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.0%2B-purple.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-## Features
+Plugin profesional de WordPress para agregar efectos de sonido inmersivos a tu sitio web mediante selectores CSS y transiciones de página.
 
-- **CSS-based Sound Mapping**: Assign sound effects to any element using CSS selectors
-- **Event Support**: Trigger sounds on hover, click, focus, blur, and more
-- **Page Transitions**: Add entry and exit sounds to pages with URL pattern matching
-- **User Preferences**: Allow visitors to control volume and save their preferences
-- **Media Library Integration**: Uses WordPress media library for sound management
-- **Performance Optimized**: Uses Web Audio API with HTML5 Audio fallback
-- **Accessibility**: Respects prefers-reduced-motion and includes mute controls
-- **Mobile Support**: Optional mobile sound effects with optimized performance
+## 🎵 Características
 
-## Installation
+### Mapeo de Sonidos CSS
+- **Solo Clases e IDs**: Asigna sonidos a elementos usando selectores de clase (`.ejemplo`) o ID (`#ejemplo`)
+- **Múltiples Eventos**: Soporta hover, click, active, focus, blur, mouseenter, mouseleave, mousedown, mouseup
+- **Control de Volumen**: Ajuste individual de volumen para cada sonido
+- **Retraso Personalizable**: Configura retrasos antes de reproducir el sonido
 
-1. Upload the `nova-sound-fx` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Navigate to 'Nova Sound FX' in the WordPress admin menu
+### Transiciones de Página
+- **Sonidos de Entrada/Salida**: Reproduce sonidos al entrar o salir de páginas
+- **Patrones de URL**: Usa wildcards (*) o expresiones regulares
+- **Sistema de Prioridades**: Define qué sonidos tienen precedencia
+- **Transiciones Suaves**: Overlay visual durante las transiciones
 
-## Usage
+### Controles de Usuario
+- **Widget Personalizable**: Tres estilos (minimal, floating, embedded)
+- **Preferencias Persistentes**: Guarda configuraciones en localStorage
+- **Accesibilidad**: Respeta `prefers-reduced-motion`
+- **Modo Móvil**: Opción para habilitar/deshabilitar en dispositivos móviles
 
-### 1. Upload Sounds
+### Integración con Gutenberg
+- **Bloque de Controles**: Agrega el widget de control fácilmente
+- **Bloque de Botón con Sonido**: Crea botones con efectos de sonido personalizados
 
-- Go to Nova Sound FX → Sound Library
-- Click "Upload New Sound" to add MP3 or WAV files
-- Sounds are stored in your WordPress Media Library
+## 📦 Instalación
 
-### 2. CSS Sound Mapping
+1. Descarga el plugin desde GitHub
+2. Sube la carpeta `nova-sound-fx` a `/wp-content/plugins/`
+3. Activa el plugin desde el panel de WordPress
+4. Ve a **Nova Sound FX** en el menú de administración
 
-Map sounds to elements using CSS selectors:
+## 🚀 Uso Rápido
 
-1. Go to Nova Sound FX → CSS Sound Mapping
-2. Click "Add New Mapping"
-3. Enter a CSS selector (e.g., `.button`, `#submit-form`)
-4. Choose an event type (hover, click, focus, etc.)
-5. Select a sound and adjust volume/delay
+### Agregar un Mapeo de Sonido
 
-### 3. Page Transitions
+1. Ve a **Nova Sound FX → Mapeo de Sonidos CSS**
+2. Haz clic en "Agregar Nuevo Mapeo"
+3. Ingresa el selector CSS (ej: `.mi-boton`, `#header`)
+4. Selecciona el evento (hover, click, etc.)
+5. Elige un sonido de tu biblioteca
+6. Ajusta volumen y retraso
+7. Guarda el mapeo
 
-Add sounds when users navigate between pages:
+### Usar el Shortcode de Controles
 
-1. Go to Nova Sound FX → Page Transitions
-2. Set global entry/exit sounds (optional)
-3. Add URL-specific patterns for custom sounds:
-   - Use wildcards: `*/about/*`
-   - Use regex: `regex:.*\.pdf$`
-   - Specific pages: `/404`
-
-### 4. User Controls Shortcode
-
-Add a control widget for users to adjust sound settings:
-
-```
-[nova_sound_fx_controls]
-```
-
-Shortcode attributes:
-- `style`: minimal, floating, or embedded (default: minimal)
-- `position`: top-left, top-right, bottom-left, bottom-right (default: bottom-right)
-- `theme`: light or dark (default: light)
-- `show_volume`: yes or no (default: yes)
-- `show_save`: yes or no (default: yes)
-
-Example:
-```
-[nova_sound_fx_controls style="floating" position="top-right" theme="dark"]
+```php
+[nova_sound_fx_controls style="minimal" position="bottom-right" theme="light"]
 ```
 
-## JavaScript API
+**Parámetros:**
+- `style`: minimal, floating, embedded
+- `position`: top-left, top-right, bottom-left, bottom-right
+- `theme`: light, dark
+- `show_volume`: yes, no
+- `show_save`: yes, no
 
-The plugin exposes a global JavaScript API:
+### Configurar Transiciones de Página
+
+1. Ve a **Nova Sound FX → Transiciones de Página**
+2. Configura sonidos globales o por URL específica
+3. Usa patrones como:
+   - `/404` - Página 404
+   - `*/shop/*` - Todas las páginas de tienda
+   - `regex:.*\.pdf$` - Enlaces a PDFs
+
+## 🛠️ Configuración Avanzada
+
+### API JavaScript
+
+El plugin expone una API global para desarrolladores:
 
 ```javascript
-// Play a sound
-window.NovaSoundFX.play(soundUrl, options);
+// Reproducir un sonido
+window.NovaSoundFX.play(url, options);
 
-// Set volume (0-100)
+// Control de volumen
 window.NovaSoundFX.setVolume(50);
-
-// Mute/unmute
 window.NovaSoundFX.mute();
 window.NovaSoundFX.unmute();
 
-// Check mute status
-const isMuted = window.NovaSoundFX.isMuted();
-
-// Get current volume
-const volume = window.NovaSoundFX.getVolume();
-
-// Save user preferences
+// Guardar preferencias
 window.NovaSoundFX.savePreferences();
+
+// Recargar mapeos dinámicamente
+window.NovaSoundFX.reload();
 ```
 
-## Settings
-
-Configure global options in Nova Sound FX → Settings:
-
-- **Enable Sounds**: Master switch for all sound effects
-- **Default Volume**: Initial volume level (0-100)
-- **Enable on Mobile**: Allow sounds on mobile devices
-- **Respect Accessibility**: Disable for users with reduced motion preference
-- **Preview Mode**: Test sounds as admin before enabling for all users
-
-## Database Tables
-
-The plugin creates two custom tables:
-
-- `{prefix}_nova_sound_fx_css_mappings`: Stores CSS selector sound mappings
-- `{prefix}_nova_sound_fx_transitions`: Stores page transition sounds
-
-## Browser Compatibility
-
-- Chrome 45+
-- Firefox 40+
-- Safari 9+
-- Edge 12+
-- Mobile browsers with Web Audio API support
-
-## Performance Considerations
-
-- Sounds are preloaded using Web Audio API for instant playback
-- First 5 sounds are automatically preloaded
-- Larger sound libraries may impact initial page load
-- Recommended: Use compressed MP3 files under 500KB
-
-## Troubleshooting
-
-**Sounds not playing:**
-- Check browser console for errors
-- Ensure sounds are enabled in settings
-- Verify browser autoplay policies
-- Test with preview mode first
-
-**Performance issues:**
-- Reduce number of simultaneous sounds
-- Use smaller, compressed audio files
-- Disable sounds on mobile devices
-- Limit preloading for large libraries
-
-## Developer Hooks
-
-### Filters
+### Hooks y Filtros
 
 ```php
-// Modify sound data before output
-add_filter('nova_sound_fx_sound_data', 'my_custom_function');
+// Filtrar configuraciones antes de guardar
+add_filter('nova_sound_fx_settings', 'mi_funcion');
 
-// Customize user preferences
-add_filter('nova_sound_fx_default_preferences', 'my_preferences');
+// Acción después de guardar un mapeo
+add_action('nova_sound_fx_mapping_saved', 'mi_callback');
+
+// Modificar datos de sonido antes de enviar al frontend
+add_filter('nova_sound_fx_sound_data', 'modificar_datos');
 ```
 
-### Actions
+## 🔧 Requisitos
 
-```php
-// After sound mapping saved
-do_action('nova_sound_fx_mapping_saved', $mapping_id, $data);
+- WordPress 5.0 o superior
+- PHP 7.0 o superior
+- Navegador con soporte para Web Audio API
+- jQuery (incluido en WordPress)
 
-// After transition saved
-do_action('nova_sound_fx_transition_saved', $transition_id, $data);
-```
+## 🐛 Solución de Problemas
 
-## Changelog
+### Los sonidos no se reproducen
+1. Verifica que los sonidos estén habilitados en la configuración
+2. Asegúrate de que el navegador permita la reproducción automática
+3. Revisa la consola del navegador para errores
+4. Confirma que los archivos de audio existen y son accesibles
 
-### 1.0.0
-- Initial release
-- CSS sound mapping
-- Page transitions
-- User preference controls
-- WordPress Media Library integration
+### Los selectores CSS no funcionan
+- Solo se permiten clases (`.clase`) e IDs (`#id`)
+- No uses selectores de elementos (div, p, etc.)
+- Verifica que los elementos existan en la página
+- Usa el modo preview para ver elementos marcados
 
-## License
+### Conflictos con otros plugins
+- Desactiva el modo preview si no eres administrador
+- Ajusta la prioridad de carga de scripts
+- Contacta soporte con detalles del conflicto
 
-GPL v2 or later
+## 📝 Changelog
 
-## Credits
+### v1.0.0 (2024)
+- Lanzamiento inicial con todas las características principales
+- Soporte completo para mapeo CSS (solo clases e IDs)
+- Sistema de transiciones de página
+- Widget de controles personalizables
+- Integración con Gutenberg
+- API JavaScript pública
 
-Developed with ❤️ for immersive web experiences.
+## 🤝 Contribuir
 
-Icons from Feather Icons (https://feathericons.com/)
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este plugin está licenciado bajo GPL v2 o posterior.
+
+## 👨‍💻 Desarrollado por
+
+Plugin desarrollado con más de 12 años de experiencia en WordPress, siguiendo las mejores prácticas y estándares de codificación.
+
+## 🙏 Agradecimientos
+
+- WordPress Community
+- Web Audio API Contributors
+- Todos los beta testers
+
+---
+
+**¿Necesitas ayuda?** Abre un issue en GitHub o contacta a soporte@tu-sitio.com

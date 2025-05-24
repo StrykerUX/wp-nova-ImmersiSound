@@ -1,160 +1,475 @@
-/* Nova Sound FX Admin Styles */
+/**
+ * Nova Sound FX Admin Styles - Versión Mejorada
+ * Diseñado para una mejor experiencia de usuario
+ */
 
-.nova-sound-fx-admin {
-    max-width: 1200px;
+/* Variables CSS */
+:root {
+    --nova-primary: #007cba;
+    --nova-primary-dark: #005a87;
+    --nova-success: #00a32a;
+    --nova-error: #d63638;
+    --nova-warning: #f0b849;
+    --nova-info: #2271b1;
+    --nova-bg: #ffffff;
+    --nova-bg-secondary: #f5f5f5;
+    --nova-border: #e0e0e0;
+    --nova-text: #1e1e1e;
+    --nova-text-secondary: #757575;
 }
 
-/* Tab Navigation */
-.nova-sound-fx-admin .nav-tab-wrapper {
+/* Estilos generales */
+.nova-sound-fx-admin {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.nova-sound-fx-admin h1 {
+    font-size: 32px;
+    font-weight: 600;
     margin-bottom: 20px;
 }
 
-.nova-sound-fx-admin .tab-content {
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+/* Tab content */
+.tab-content {
+    background: var(--nova-bg);
+    border: 1px solid var(--nova-border);
+    border-radius: 8px;
+    padding: 30px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.nova-sound-fx-admin .tab-pane {
+.tab-pane {
     display: none;
 }
 
-.nova-sound-fx-admin .tab-pane.active {
+.tab-pane.active {
     display: block;
+    animation: fadeIn 0.3s ease;
 }
 
-/* Sound Library */
-.sound-upload-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Info box */
+.nova-info-box {
+    background: #e7f4ff;
+    border: 1px solid #2271b1;
+    border-radius: 4px;
+    padding: 12px 16px;
     margin-bottom: 20px;
-    padding: 15px;
-    background: #f5f5f5;
-    border-radius: 5px;
-}
-
-.sound-categories {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+.nova-info-box .dashicons {
+    color: #2271b1;
+    font-size: 20px;
+}
+
+/* Sección de carga de sonidos */
+.sound-upload-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--nova-bg-secondary);
+    border-radius: 8px;
+}
+
+.sound-categories {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sound-categories label {
+    font-weight: 500;
+    color: var(--nova-text-secondary);
+}
+
+/* Grilla de biblioteca de sonidos */
 .sound-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
     margin-top: 20px;
 }
 
 .sound-item {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-    text-align: center;
-    transition: all 0.3s ease;
+    background: var(--nova-bg);
+    border: 1px solid var(--nova-border);
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s ease;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .sound-item:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: var(--nova-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
 }
 
 .sound-item-icon {
-    font-size: 48px;
-    color: #007cba;
-    margin-bottom: 10px;
+    width: 48px;
+    height: 48px;
+    background: var(--nova-bg-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.sound-item-icon .dashicons {
+    font-size: 24px;
+    color: var(--nova-primary);
+}
+
+.sound-item-info {
+    text-align: center;
 }
 
 .sound-item-title {
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--nova-text);
+    margin-bottom: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.sound-item-controls {
+.sound-item-meta {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
-}
-
-.sound-item-controls button {
-    padding: 5px 10px;
     font-size: 12px;
+    color: var(--nova-text-secondary);
 }
 
-.sound-item-delete {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    display: none;
+.sound-format {
+    background: var(--nova-bg-secondary);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.sound-item-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.sound-item-controls .button {
+    padding: 4px 8px;
+    min-height: 28px;
+}
+
+.sound-item-controls .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+/* Estado vacío */
+.nova-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--nova-text-secondary);
+}
+
+.nova-empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--nova-text);
+}
+
+/* Tablas mejoradas */
+.wp-list-table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.wp-list-table thead th {
+    background: var(--nova-bg-secondary);
+    font-weight: 600;
+    color: var(--nova-text);
+    border-bottom: 2px solid var(--nova-border);
+}
+
+.wp-list-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.wp-list-table .column-actions {
+    text-align: right;
+}
+
+/* Selector display */
+.css-selector-display {
+    background: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.selector-type {
+    display: inline-block;
+    background: var(--nova-primary);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
+/* Event badges */
+.event-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--nova-bg-secondary);
+    color: var(--nova-text);
+}
+
+.event-badge.event-hover { background: #e3f2fd; color: #1976d2; }
+.event-badge.event-click { background: #f3e5f5; color: #7b1fa2; }
+.event-badge.event-active { background: #fff3e0; color: #e65100; }
+.event-badge.event-focus { background: #e8f5e9; color: #2e7d32; }
+
+/* Volume display */
+.volume-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.volume-display .dashicons {
+    font-size: 16px;
+    color: var(--nova-text-secondary);
+}
+
+/* Priority badges */
+.priority-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.priority-badge.low {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.priority-badge.medium {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.priority-badge.high {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* Modales */
+.nova-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100000;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.sound-item:hover .sound-item-delete {
+.nova-modal-content {
+    background: var(--nova-bg);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.nova-modal-content h2 {
+    padding: 20px 30px;
+    margin: 0;
+    border-bottom: 1px solid var(--nova-border);
+    font-size: 20px;
+}
+
+.nova-modal-content .form-table {
+    margin: 20px 30px;
+}
+
+.nova-modal-content .submit {
+    padding: 20px 30px;
+    margin: 0;
+    border-top: 1px solid var(--nova-border);
+    background: var(--nova-bg-secondary);
+}
+
+.nova-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--nova-text-secondary);
+    transition: color 0.2s;
+}
+
+.nova-modal-close:hover {
+    color: var(--nova-text);
+}
+
+/* Form feedback */
+.nova-form-feedback {
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.nova-form-info {
+    color: var(--nova-info);
+}
+
+.nova-form-success {
+    color: var(--nova-success);
+}
+
+.nova-form-error {
+    color: var(--nova-error);
+}
+
+/* CSS selector validation */
+input#css-selector.valid {
+    border-color: var(--nova-success);
+}
+
+input#css-selector.invalid {
+    border-color: var(--nova-error);
+}
+
+#selector-preview {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f0f8ff;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+/* Action buttons */
+.nova-action-buttons {
     display: flex;
+    gap: 8px;
 }
 
-/* CSS Mapping & Transitions Tables */
-.wp-list-table .column-css_selector,
-.wp-list-table .column-url_pattern {
-    width: 30%;
+/* Toast notifications */
+.nova-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--nova-bg);
+    border: 1px solid var(--nova-border);
+    border-radius: 4px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100001;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
 }
 
-.wp-list-table .column-event,
-.wp-list-table .column-type {
-    width: 15%;
+.nova-toast.nova-toast-show {
+    transform: translateX(0);
 }
 
-.wp-list-table .column-sound {
-    width: 20%;
+.nova-toast .dashicons {
+    font-size: 20px;
 }
 
-.wp-list-table .column-volume {
-    width: 15%;
+.nova-toast-success {
+    border-color: var(--nova-success);
+    color: var(--nova-success);
 }
 
-.wp-list-table .column-delay,
-.wp-list-table .column-priority {
-    width: 10%;
+.nova-toast-error {
+    border-color: var(--nova-error);
+    color: var(--nova-error);
 }
 
-.wp-list-table .column-actions {
-    width: 10%;
-    text-align: center;
+.nova-toast-warning {
+    border-color: var(--nova-warning);
+    color: var(--nova-warning);
 }
 
-/* Global Transitions */
+.nova-toast-info {
+    border-color: var(--nova-info);
+    color: var(--nova-info);
+}
+
+/* Transition settings */
 .transition-settings {
-    max-width: 800px;
+    margin-top: 20px;
+}
+
+.transition-settings h3 {
+    font-size: 16px;
+    margin: 30px 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--nova-border);
 }
 
 .global-transitions {
-    background: #f5f5f5;
+    background: var(--nova-bg-secondary);
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-bottom: 30px;
 }
 
 .transition-row {
-    display: grid;
-    grid-template-columns: 200px 1fr 150px 60px;
-    gap: 15px;
+    display: flex;
     align-items: center;
+    gap: 15px;
     margin-bottom: 15px;
 }
 
@@ -163,114 +478,121 @@
 }
 
 .transition-row label {
-    font-weight: 600;
+    min-width: 250px;
+    font-weight: 500;
 }
 
-.sound-select {
-    width: 100%;
+.transition-row select {
+    flex: 1;
 }
 
-/* Modals */
-.nova-modal {
-    position: fixed;
-    z-index: 100000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: none;
+.transition-row input[type="range"] {
+    width: 120px;
 }
 
-.nova-modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 600px;
-    border-radius: 5px;
-    position: relative;
-}
-
-.nova-modal-close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 20px;
-    margin-top: -10px;
-}
-
-.nova-modal-close:hover,
-.nova-modal-close:focus {
-    color: #000;
-}
-
-.nova-modal h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Volume Sliders */
+/* Volume sliders */
 input[type="range"] {
-    width: 100%;
     -webkit-appearance: none;
-    height: 5px;
-    border-radius: 5px;
-    background: #ddd;
+    appearance: none;
+    height: 6px;
+    background: var(--nova-border);
+    border-radius: 3px;
     outline: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
+    background: var(--nova-primary);
     border-radius: 50%;
-    background: #007cba;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--nova-primary-dark);
+    transform: scale(1.1);
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
+    background: var(--nova-primary);
     border-radius: 50%;
-    background: #007cba;
     cursor: pointer;
     border: none;
+    transition: all 0.2s;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    background: var(--nova-primary-dark);
+    transform: scale(1.1);
 }
 
 .volume-value {
-    display: inline-block;
-    min-width: 40px;
-    text-align: center;
-    font-weight: 600;
+    min-width: 45px;
+    text-align: right;
+    font-weight: 500;
+    color: var(--nova-text-secondary);
 }
 
-/* Settings Form */
-#nova-sound-fx-settings .form-table th {
-    width: 250px;
+/* Buttons with icons */
+.button .dashicons {
+    margin-right: 4px;
+    vertical-align: middle;
+    font-size: 16px;
 }
 
-/* Preview Badge */
-.preview-badge {
-    display: inline-block;
-    background: #ff9800;
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-size: 11px;
+/* Preview button */
+.button-link.preview-sound {
     margin-left: 10px;
+    text-decoration: none;
 }
 
-/* Loading States */
+.button-link.preview-sound:hover {
+    text-decoration: underline;
+}
+
+/* Sound name in table */
+.sound-name {
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .sound-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .transition-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .transition-row label {
+        min-width: auto;
+    }
+    
+    .transition-row select,
+    .transition-row input[type="range"] {
+        width: 100%;
+    }
+    
+    .nova-toast {
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+/* Loading state */
 .nova-loading {
     opacity: 0.6;
     pointer-events: none;
+    position: relative;
 }
 
 .nova-loading::after {
@@ -278,138 +600,15 @@ input[type="range"]::-moz-range-thumb {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
     width: 20px;
     height: 20px;
-    border: 2px solid #007cba;
-    border-top-color: transparent;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--nova-primary);
+    border-right-color: transparent;
     border-radius: 50%;
-    animation: nova-spin 0.8s linear infinite;
+    animation: spin 0.8s linear infinite;
 }
 
-@keyframes nova-spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-/* Action Buttons */
-.nova-action-buttons {
-    display: flex;
-    gap: 5px;
-}
-
-.nova-action-buttons button {
-    padding: 4px 8px;
-    font-size: 12px;
-}
-
-/* Responsive */
-@media screen and (max-width: 782px) {
-    .sound-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-    
-    .transition-row {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
-    .sound-upload-section {
-        flex-direction: column;
-        gap: 15px;
-    }
-}
-
-/* Audio Player */
-.nova-audio-player {
-    margin-top: 10px;
-    width: 100%;
-}
-
-/* CSS Validator Feedback */
-.css-selector-feedback {
-    margin-top: 5px;
-    font-size: 12px;
-}
-
-.css-selector-feedback.valid {
-    color: #008a20;
-}
-
-.css-selector-feedback.invalid {
-    color: #d63638;
-}
-
-/* Empty State */
-.nova-empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    background: #f5f5f5;
-    border-radius: 5px;
-    color: #666;
-}
-
-.nova-empty-state h3 {
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.nova-empty-state p {
-    margin-bottom: 20px;
-}
-
-/* Toast Notifications */
-.nova-toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #333;
-    color: #fff;
-    padding: 15px 20px;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    z-index: 100001;
-    animation: slideInRight 0.3s ease;
-}
-
-.nova-toast.success {
-    background: #008a20;
-}
-
-.nova-toast.error {
-    background: #d63638;
-}
-
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Priority Badge */
-.priority-badge {
-    display: inline-block;
-    background: #007cba;
-    color: #fff;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 11px;
-}
-
-.priority-badge.high {
-    background: #d63638;
-}
-
-.priority-badge.medium {
-    background: #ff9800;
-}
-
-.priority-badge.low {
-    background: #008a20;
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

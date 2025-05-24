@@ -1,5 +1,6 @@
 /**
- * Nova Sound FX Public JavaScript
+ * Nova Sound FX Public JavaScript - Versión Mejorada
+ * Con soporte completo para todos los tipos de eventos
  */
 (function($) {
     'use strict';
@@ -15,8 +16,9 @@
             this.userPreferences = this.loadUserPreferences();
             this.currentPageSounds = [];
             this.eventListeners = new Map();
+            this.activeElements = new Set();
             
-            // Check if sounds should be enabled
+            // Verificar si los sonidos deben estar habilitados
             if (!this.shouldEnableSounds()) {
                 return;
             }
@@ -25,10 +27,10 @@
         }
         
         /**
-         * Initialize the sound system
+         * Inicializar el sistema de sonido
          */
         init() {
-            // Wait for user interaction to initialize audio context (browser requirement)
+            // Esperar interacción del usuario para inicializar el contexto de audio (requisito del navegador)
             const initAudio = () => {
                 if (!this.isInitialized) {
                     this.initAudioContext();
@@ -41,16 +43,16 @@
             document.addEventListener('click', initAudio);
             document.addEventListener('touchstart', initAudio);
             
-            // Load sound mappings
+            // Cargar mapeos de sonido
             this.loadSoundMappings();
             
-            // Set up page transition handlers
+            // Configurar manejadores de transición de página
             this.setupPageTransitions();
             
-            // Initialize user controls
+            // Inicializar controles de usuario
             this.initializeUserControls();
             
-            // Expose global API
+            // Exponer API global
             window.NovaSoundFX = {
                 play: this.playSound.bind(this),
                 setVolume: this.setMasterVolume.bind(this),
@@ -58,31 +60,32 @@
                 unmute: this.unmute.bind(this),
                 isMuted: () => this.userPreferences.muted,
                 getVolume: () => this.userPreferences.volume,
-                savePreferences: this.saveUserPreferences.bind(this)
+                savePreferences: this.saveUserPreferences.bind(this),
+                reload: this.reloadMappings.bind(this)
             };
         }
         
         /**
-         * Check if sounds should be enabled
+         * Verificar si los sonidos deben estar habilitados
          */
         shouldEnableSounds() {
-            // Check if sounds are enabled in settings
+            // Verificar si los sonidos están habilitados en la configuración
             if (!this.settings.enable_sounds) {
                 return false;
             }
             
-            // Check mobile settings
+            // Verificar configuración móvil
             if (novaSoundFX.isMobile && !this.settings.mobile_enabled) {
                 return false;
             }
             
-            // Check accessibility preferences
+            // Verificar preferencias de accesibilidad
             if (this.settings.respect_prefers_reduced_motion && 
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 return false;
             }
             
-            // Check user preferences
+            // Verificar preferencias del usuario
             if (this.userPreferences.disabled) {
                 return false;
             }
@@ -91,27 +94,27 @@
         }
         
         /**
-         * Initialize Web Audio API context
+         * Inicializar contexto de Web Audio API
          */
         initAudioContext() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 this.audioContext = new AudioContext();
                 
-                // Create master gain node for volume control
+                // Crear nodo de ganancia maestro para control de volumen
                 this.masterGain = this.audioContext.createGain();
                 this.masterGain.connect(this.audioContext.destination);
                 this.setMasterVolume(this.userPreferences.volume);
                 
-                // Preload frequently used sounds
+                // Precargar sonidos frecuentemente usados
                 this.preloadSounds();
             } catch (e) {
-                console.error('Nova Sound FX: Failed to initialize audio context', e);
+                console.error('Nova Sound FX: Error al inicializar el contexto de audio', e);
             }
         }
         
         /**
-         * Load user preferences from localStorage
+         * Cargar preferencias del usuario desde localStorage
          */
         loadUserPreferences() {
             const defaults = {
@@ -126,7 +129,7 @@
                     return Object.assign(defaults, JSON.parse(saved));
                 }
             } catch (e) {
-                // Fallback to cookies if localStorage fails
+                // Fallback a cookies si localStorage falla
                 const cookieValue = this.getCookie('nova_sound_fx_preferences');
                 if (cookieValue) {
                     try {
@@ -139,87 +142,169 @@
         }
         
         /**
-         * Save user preferences
+         * Guardar preferencias del usuario
          */
         saveUserPreferences() {
             try {
                 localStorage.setItem('nova_sound_fx_preferences', JSON.stringify(this.userPreferences));
             } catch (e) {
-                // Fallback to cookies
+                // Fallback a cookies
                 this.setCookie('nova_sound_fx_preferences', JSON.stringify(this.userPreferences), 365);
             }
             
-            // Trigger event for UI updates
+            // Disparar evento para actualizaciones de UI
             $(document).trigger('nova-sound-fx:preferences-saved', this.userPreferences);
             
-            // Show notification if controls exist
-            this.showNotification('Preferences saved!');
+            // Mostrar notificación si existen controles
+            this.showNotification('¡Preferencias guardadas!');
         }
         
         /**
-         * Load sound mappings and set up event listeners
+         * Cargar mapeos de sonido y configurar event listeners
          */
         loadSoundMappings() {
             if (!window.NovaSoundFXData || !window.NovaSoundFXData.cssMappings) {
                 return;
             }
             
+            // Limpiar listeners existentes
+            this.clearEventListeners();
+            
+            // Agregar nuevos mapeos
             window.NovaSoundFXData.cssMappings.forEach(mapping => {
                 this.addSoundMapping(mapping);
             });
         }
         
         /**
-         * Add sound mapping for CSS selector
+         * Limpiar event listeners existentes
+         */
+        clearEventListeners() {
+            this.eventListeners.forEach((events, element) => {
+                events.forEach((handler, eventName) => {
+                    element.removeEventListener(eventName, handler);
+                });
+            });
+            this.eventListeners.clear();
+        }
+        
+        /**
+         * Recargar mapeos (útil después de cambios dinámicos)
+         */
+        reloadMappings() {
+            this.loadSoundMappings();
+        }
+        
+        /**
+         * Agregar mapeo de sonido para selector CSS
          */
         addSoundMapping(mapping) {
+            // Solo permitir selectores de clase e ID
+            if (!/^[#.][\w-]+(\s*,\s*[#.][\w-]+)*$/.test(mapping.css_selector)) {
+                console.warn('Nova Sound FX: Selector inválido:', mapping.css_selector);
+                return;
+            }
+            
             const elements = document.querySelectorAll(mapping.css_selector);
             
             elements.forEach(element => {
-                // Mark element as having sound
+                // Marcar elemento como que tiene sonido
                 element.classList.add('nova-sound-fx-active');
                 element.setAttribute('data-nova-sound-event', mapping.event_type);
                 
-                // Create event handler
+                // Crear manejador de eventos
                 const handler = (e) => {
                     this.handleSoundEvent(e, mapping);
                 };
                 
-                // Map event types to actual events
-                let eventName = mapping.event_type;
-                if (eventName === 'hover') eventName = 'mouseenter';
+                // Mapear tipos de evento a eventos reales
+                let eventNames = [];
+                switch (mapping.event_type) {
+                    case 'hover':
+                        eventNames = ['mouseenter'];
+                        break;
+                    case 'active':
+                        eventNames = ['mousedown', 'touchstart'];
+                        // También necesitamos manejar mouseup/touchend para el estado active
+                        const activeEndHandler = (e) => {
+                            this.activeElements.delete(element);
+                        };
+                        element.addEventListener('mouseup', activeEndHandler);
+                        element.addEventListener('touchend', activeEndHandler);
+                        element.addEventListener('mouseleave', activeEndHandler);
+                        break;
+                    case 'click':
+                        eventNames = ['click'];
+                        break;
+                    case 'focus':
+                        eventNames = ['focus'];
+                        break;
+                    case 'blur':
+                        eventNames = ['blur'];
+                        break;
+                    case 'mouseenter':
+                        eventNames = ['mouseenter'];
+                        break;
+                    case 'mouseleave':
+                        eventNames = ['mouseleave'];
+                        break;
+                    case 'mousedown':
+                        eventNames = ['mousedown'];
+                        break;
+                    case 'mouseup':
+                        eventNames = ['mouseup'];
+                        break;
+                    default:
+                        eventNames = [mapping.event_type];
+                }
                 
-                // Store handler reference for cleanup
+                // Almacenar referencia de handler para limpieza
                 if (!this.eventListeners.has(element)) {
                     this.eventListeners.set(element, new Map());
                 }
-                this.eventListeners.get(element).set(eventName, handler);
                 
-                // Add event listener
-                element.addEventListener(eventName, handler);
+                // Agregar event listeners
+                eventNames.forEach(eventName => {
+                    this.eventListeners.get(element).set(eventName, handler);
+                    element.addEventListener(eventName, handler);
+                });
+                
+                // Agregar indicador visual opcional
+                if (mapping.event_type === 'hover' || mapping.event_type === 'active') {
+                    element.style.cursor = 'pointer';
+                }
             });
         }
         
         /**
-         * Handle sound event
+         * Manejar evento de sonido
          */
         handleSoundEvent(event, mapping) {
             if (this.userPreferences.muted) {
                 return;
             }
             
-            // Apply delay if specified
+            // Para eventos active, verificar si ya está activo
+            if (mapping.event_type === 'active') {
+                const element = event.currentTarget;
+                if (this.activeElements.has(element)) {
+                    return; // Ya está activo, no reproducir de nuevo
+                }
+                this.activeElements.add(element);
+            }
+            
+            // Aplicar retraso si está especificado
             if (mapping.delay > 0) {
                 setTimeout(() => {
-                    this.playMappingSound(mapping, event.target);
+                    this.playMappingSound(mapping, event.currentTarget);
                 }, mapping.delay);
             } else {
-                this.playMappingSound(mapping, event.target);
+                this.playMappingSound(mapping, event.currentTarget);
             }
         }
         
         /**
-         * Play sound for mapping
+         * Reproducir sonido para mapeo
          */
         playMappingSound(mapping, element) {
             const soundUrl = mapping.sound_url;
@@ -227,137 +312,175 @@
             
             this.playSound(soundUrl, {
                 volume: volume,
-                element: element
+                element: element,
+                mapping: mapping
             });
         }
         
         /**
-         * Play sound with Web Audio API
+         * Reproducir sonido con Web Audio API
          */
         async playSound(url, options = {}) {
-            if (!this.audioContext || this.userPreferences.muted) {
+            if (!url || !this.audioContext || this.userPreferences.muted) {
                 return;
             }
             
             try {
-                // Resume audio context if suspended
+                // Reanudar contexto de audio si está suspendido
                 if (this.audioContext.state === 'suspended') {
                     await this.audioContext.resume();
                 }
                 
-                // Get or load audio buffer
+                // Obtener o cargar buffer de audio
                 let buffer = this.audioBuffers[url];
                 if (!buffer) {
                     buffer = await this.loadAudioBuffer(url);
+                    if (!buffer) {
+                        throw new Error('No se pudo cargar el buffer de audio');
+                    }
                     this.audioBuffers[url] = buffer;
                 }
                 
-                // Create source
+                // Crear fuente
                 const source = this.audioContext.createBufferSource();
                 source.buffer = buffer;
                 
-                // Create gain node for this sound
+                // Crear nodo de ganancia para este sonido
                 const gainNode = this.audioContext.createGain();
                 gainNode.gain.value = options.volume || 1;
                 
-                // Connect nodes
+                // Conectar nodos
                 source.connect(gainNode);
                 gainNode.connect(this.masterGain);
                 
-                // Add visual feedback
+                // Agregar retroalimentación visual
                 if (options.element) {
                     options.element.classList.add('nova-sound-playing');
-                    setTimeout(() => {
+                    
+                    // Agregar clase específica del evento
+                    if (options.mapping && options.mapping.event_type) {
+                        options.element.classList.add(`nova-sound-playing-${options.mapping.event_type}`);
+                    }
+                    
+                    source.onended = () => {
                         options.element.classList.remove('nova-sound-playing');
-                    }, 500);
+                        if (options.mapping && options.mapping.event_type) {
+                            options.element.classList.remove(`nova-sound-playing-${options.mapping.event_type}`);
+                        }
+                    };
                 }
                 
-                // Play sound
+                // Reproducir sonido
                 source.start(0);
                 
-                // Show visual indicator
-                this.showSoundWave();
+                // Mostrar indicador visual
+                if (this.settings.show_visual_feedback !== false) {
+                    this.showSoundWave(options.element);
+                }
                 
             } catch (error) {
-                console.error('Nova Sound FX: Error playing sound', error);
+                console.error('Nova Sound FX: Error al reproducir sonido', error);
                 
-                // Fallback to HTML5 Audio
+                // Fallback a HTML5 Audio
                 this.playFallbackAudio(url, options);
             }
         }
         
         /**
-         * Load audio buffer
+         * Cargar buffer de audio
          */
         async loadAudioBuffer(url) {
-            const response = await fetch(url);
-            const arrayBuffer = await response.arrayBuffer();
-            return await this.audioContext.decodeAudioData(arrayBuffer);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const arrayBuffer = await response.arrayBuffer();
+                return await this.audioContext.decodeAudioData(arrayBuffer);
+            } catch (error) {
+                console.error('Nova Sound FX: Error al cargar audio', url, error);
+                return null;
+            }
         }
         
         /**
-         * Fallback audio playback
+         * Reproducción de audio de respaldo
          */
         playFallbackAudio(url, options = {}) {
-            const audio = new Audio(url);
-            audio.volume = (options.volume || 1) * (this.userPreferences.volume / 100);
-            audio.play().catch(e => {
-                console.error('Nova Sound FX: Fallback audio failed', e);
-            });
+            try {
+                const audio = new Audio(url);
+                audio.volume = (options.volume || 1) * (this.userPreferences.volume / 100);
+                audio.play().catch(e => {
+                    console.error('Nova Sound FX: Fallo el audio de respaldo', e);
+                });
+            } catch (e) {
+                console.error('Nova Sound FX: Error crítico en audio', e);
+            }
         }
         
         /**
-         * Preload frequently used sounds
+         * Precargar sonidos frecuentemente usados
          */
         preloadSounds() {
-            // Preload first 5 sounds
+            // Precargar primeros 5 sonidos
             const soundUrls = Object.values(this.sounds).slice(0, 5);
             
             soundUrls.forEach(url => {
                 this.loadAudioBuffer(url).catch(e => {
-                    console.error('Nova Sound FX: Failed to preload sound', url, e);
+                    console.error('Nova Sound FX: Error al precargar sonido', url, e);
                 });
             });
         }
         
         /**
-         * Set up page transition handlers
+         * Configurar manejadores de transición de página
          */
         setupPageTransitions() {
             if (!window.NovaSoundFXData || !window.NovaSoundFXData.transitions) {
                 return;
             }
             
-            // Play entry sound for current page
-            this.playPageEntrySound();
+            // Reproducir sonido de entrada para la página actual
+            setTimeout(() => {
+                this.playPageEntrySound();
+            }, 100);
             
-            // Intercept link clicks for exit sounds
+            // Interceptar clics en enlaces para sonidos de salida
             document.addEventListener('click', (e) => {
                 const link = e.target.closest('a');
                 if (link && link.href && !link.getAttribute('data-nova-no-sound')) {
-                    this.handlePageExit(e, link.href);
+                    // Verificar si es un enlace interno
+                    const currentHost = window.location.host;
+                    const linkHost = new URL(link.href, window.location.href).host;
+                    
+                    if (currentHost === linkHost) {
+                        this.handlePageExit(e, link.href);
+                    }
                 }
             });
             
-            // Handle browser back/forward
+            // Manejar navegación del navegador hacia atrás/adelante
             window.addEventListener('beforeunload', () => {
                 this.playPageExitSound(false);
             });
         }
         
         /**
-         * Play page entry sound
+         * Reproducir sonido de entrada de página
          */
         playPageEntrySound() {
             const transition = this.findMatchingTransition(window.location.href, 'enter');
             if (transition) {
                 const volume = (transition.volume / 100) * (this.userPreferences.volume / 100);
-                this.playSound(transition.sound_url, { volume });
+                this.playSound(transition.sound_url, { 
+                    volume,
+                    isTransition: true 
+                });
             }
         }
         
         /**
-         * Play page exit sound
+         * Reproducir sonido de salida de página
          */
         playPageExitSound(wait = true) {
             const transition = this.findMatchingTransition(window.location.href, 'exit');
@@ -365,19 +488,22 @@
                 const volume = (transition.volume / 100) * (this.userPreferences.volume / 100);
                 
                 if (wait) {
-                    // Show transition overlay
+                    // Mostrar overlay de transición
                     this.showTransitionOverlay();
                 }
                 
-                this.playSound(transition.sound_url, { volume });
+                this.playSound(transition.sound_url, { 
+                    volume,
+                    isTransition: true 
+                });
                 
-                return wait ? 300 : 0; // Return delay duration
+                return wait ? 300 : 0; // Retornar duración del retraso
             }
             return 0;
         }
         
         /**
-         * Handle page exit
+         * Manejar salida de página
          */
         handlePageExit(event, targetUrl) {
             const delay = this.playPageExitSound();
@@ -392,15 +518,18 @@
         }
         
         /**
-         * Find matching transition for URL
+         * Encontrar transición coincidente para URL
          */
         findMatchingTransition(url, type) {
             const transitions = window.NovaSoundFXData.transitions
                 .filter(t => t.transition_type === type || t.transition_type === 'both')
                 .sort((a, b) => b.priority - a.priority);
             
+            // Obtener solo la parte de la ruta de la URL
+            const urlPath = new URL(url).pathname;
+            
             for (const transition of transitions) {
-                if (this.matchesUrlPattern(url, transition.url_pattern)) {
+                if (this.matchesUrlPattern(urlPath, transition.url_pattern)) {
                     return transition;
                 }
             }
@@ -409,26 +538,36 @@
         }
         
         /**
-         * Check if URL matches pattern
+         * Verificar si la URL coincide con el patrón
          */
         matchesUrlPattern(url, pattern) {
-            // Handle regex patterns
+            // Manejar patrones regex
             if (pattern.startsWith('regex:')) {
-                const regex = new RegExp(pattern.substring(6));
-                return regex.test(url);
+                try {
+                    const regex = new RegExp(pattern.substring(6));
+                    return regex.test(url);
+                } catch (e) {
+                    console.error('Nova Sound FX: Patrón regex inválido', pattern);
+                    return false;
+                }
             }
             
-            // Convert wildcard pattern to regex
+            // Convertir patrón comodín a regex
             const regexPattern = pattern
                 .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
                 .replace(/\*/g, '.*');
             
-            const regex = new RegExp('^' + regexPattern + '$');
-            return regex.test(url);
+            try {
+                const regex = new RegExp('^' + regexPattern + '$');
+                return regex.test(url);
+            } catch (e) {
+                console.error('Nova Sound FX: Patrón inválido', pattern);
+                return false;
+            }
         }
         
         /**
-         * Initialize user controls
+         * Inicializar controles de usuario
          */
         initializeUserControls() {
             const controls = document.querySelectorAll('.nova-sound-fx-controls');
@@ -437,11 +576,11 @@
                 this.setupControlWidget(control);
             });
             
-            // Listen for dynamically added controls
+            // Escuchar controles agregados dinámicamente
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach(mutation => {
                     mutation.addedNodes.forEach(node => {
-                        if (node.classList && node.classList.contains('nova-sound-fx-controls')) {
+                        if (node.nodeType === 1 && node.classList && node.classList.contains('nova-sound-fx-controls')) {
                             this.setupControlWidget(node);
                         }
                     });
@@ -452,7 +591,7 @@
         }
         
         /**
-         * Set up control widget
+         * Configurar widget de control
          */
         setupControlWidget(widget) {
             const muteBtn = widget.querySelector('.nova-mute-btn');
@@ -460,7 +599,7 @@
             const saveBtn = widget.querySelector('.nova-save-btn');
             const expandBtn = widget.querySelector('.nova-expand-btn');
             
-            // Set initial states
+            // Establecer estados iniciales
             this.updateMuteButton(muteBtn);
             if (volumeSlider) {
                 volumeSlider.value = this.userPreferences.volume;
@@ -470,7 +609,7 @@
                 }
             }
             
-            // Mute/unmute button
+            // Botón de silenciar/desilenciar
             if (muteBtn) {
                 muteBtn.addEventListener('click', () => {
                     if (this.userPreferences.muted) {
@@ -479,10 +618,17 @@
                         this.mute();
                     }
                     this.updateMuteButton(muteBtn);
+                    
+                    // Reproducir sonido de feedback
+                    if (!this.userPreferences.muted) {
+                        this.playSound(novaSoundFX.sounds[Object.keys(novaSoundFX.sounds)[0]], {
+                            volume: 0.3
+                        });
+                    }
                 });
             }
             
-            // Volume slider
+            // Slider de volumen
             if (volumeSlider) {
                 volumeSlider.addEventListener('input', (e) => {
                     const volume = parseInt(e.target.value);
@@ -493,31 +639,55 @@
                         valueDisplay.textContent = volume + '%';
                     }
                 });
+                
+                // Reproducir sonido al soltar el slider
+                volumeSlider.addEventListener('change', (e) => {
+                    if (!this.userPreferences.muted && Object.keys(novaSoundFX.sounds).length > 0) {
+                        this.playSound(novaSoundFX.sounds[Object.keys(novaSoundFX.sounds)[0]], {
+                            volume: 0.5
+                        });
+                    }
+                });
             }
             
-            // Save button
+            // Botón de guardar
             if (saveBtn) {
                 saveBtn.addEventListener('click', () => {
                     this.saveUserPreferences();
                 });
             }
             
-            // Expand/collapse button
+            // Botón de expandir/contraer
             if (expandBtn) {
                 expandBtn.addEventListener('click', () => {
                     widget.classList.toggle('nova-collapsed');
+                    const isCollapsed = widget.classList.contains('nova-collapsed');
+                    expandBtn.setAttribute('aria-expanded', !isCollapsed);
                 });
                 
-                // Start collapsed
+                // Comenzar contraído
                 widget.classList.add('nova-collapsed');
+                expandBtn.setAttribute('aria-expanded', 'false');
             }
             
-            // Add entrance animation
+            // Agregar animación de entrada
             widget.classList.add('nova-controls-enter');
+            
+            // Escuchar cambios de preferencias
+            $(document).on('nova-sound-fx:preferences-saved', (e, prefs) => {
+                this.updateMuteButton(muteBtn);
+                if (volumeSlider) {
+                    volumeSlider.value = prefs.volume;
+                    const valueDisplay = widget.querySelector('.nova-volume-value');
+                    if (valueDisplay) {
+                        valueDisplay.textContent = prefs.volume + '%';
+                    }
+                }
+            });
         }
         
         /**
-         * Update mute button state
+         * Actualizar estado del botón de silencio
          */
         updateMuteButton(button) {
             if (!button) return;
@@ -526,16 +696,18 @@
             const volumeOff = button.querySelector('.nova-icon-volume-off');
             
             if (this.userPreferences.muted) {
-                volumeOn.style.display = 'none';
-                volumeOff.style.display = 'block';
+                if (volumeOn) volumeOn.style.display = 'none';
+                if (volumeOff) volumeOff.style.display = 'block';
+                button.setAttribute('aria-label', 'Activar sonido');
             } else {
-                volumeOn.style.display = 'block';
-                volumeOff.style.display = 'none';
+                if (volumeOn) volumeOn.style.display = 'block';
+                if (volumeOff) volumeOff.style.display = 'none';
+                button.setAttribute('aria-label', 'Silenciar');
             }
         }
         
         /**
-         * Set master volume
+         * Establecer volumen maestro
          */
         setMasterVolume(volume) {
             this.userPreferences.volume = Math.max(0, Math.min(100, volume));
@@ -546,7 +718,7 @@
         }
         
         /**
-         * Mute sounds
+         * Silenciar sonidos
          */
         mute() {
             this.userPreferences.muted = true;
@@ -556,7 +728,7 @@
         }
         
         /**
-         * Unmute sounds
+         * Desilenciar sonidos
          */
         unmute() {
             this.userPreferences.muted = false;
@@ -566,9 +738,9 @@
         }
         
         /**
-         * Show sound wave indicator
+         * Mostrar indicador de onda de sonido
          */
-        showSoundWave() {
+        showSoundWave(element) {
             let wave = document.querySelector('.nova-sound-wave');
             
             if (!wave) {
@@ -576,6 +748,15 @@
                 wave.className = 'nova-sound-wave';
                 wave.innerHTML = '<span></span><span></span><span></span><span></span><span></span>';
                 document.body.appendChild(wave);
+            }
+            
+            // Posicionar cerca del elemento si existe
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                wave.style.position = 'fixed';
+                wave.style.left = rect.left + rect.width / 2 + 'px';
+                wave.style.top = rect.top + rect.height / 2 + 'px';
+                wave.style.transform = 'translate(-50%, -50%)';
             }
             
             wave.classList.add('active');
@@ -586,7 +767,7 @@
         }
         
         /**
-         * Show transition overlay
+         * Mostrar overlay de transición
          */
         showTransitionOverlay() {
             let overlay = document.querySelector('.nova-page-transition-overlay');
@@ -601,7 +782,7 @@
         }
         
         /**
-         * Show notification
+         * Mostrar notificación
          */
         showNotification(message) {
             const notifications = document.querySelectorAll('.nova-notification');
@@ -614,20 +795,22 @@
                     notification.classList.add('nova-show');
                     
                     setTimeout(() => {
-                        notification.style.display = 'none';
                         notification.classList.remove('nova-show');
+                        setTimeout(() => {
+                            notification.style.display = 'none';
+                        }, 300);
                     }, 2000);
                 }
             });
         }
         
         /**
-         * Cookie helpers
+         * Helpers de cookies
          */
         setCookie(name, value, days) {
             const expires = new Date();
             expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/;SameSite=Lax';
         }
         
         getCookie(name) {
@@ -644,28 +827,25 @@
         }
         
         /**
-         * Cleanup method
+         * Método de limpieza
          */
         destroy() {
-            // Remove event listeners
-            this.eventListeners.forEach((events, element) => {
-                events.forEach((handler, eventName) => {
-                    element.removeEventListener(eventName, handler);
-                });
-            });
+            // Remover event listeners
+            this.clearEventListeners();
             
-            this.eventListeners.clear();
-            
-            // Close audio context
+            // Cerrar contexto de audio
             if (this.audioContext) {
                 this.audioContext.close();
             }
+            
+            // Limpiar elementos activos
+            this.activeElements.clear();
         }
     }
     
-    // Initialize on DOM ready
+    // Inicializar en DOM ready
     $(document).ready(function() {
-        // Only initialize if settings are available
+        // Solo inicializar si las configuraciones están disponibles
         if (typeof novaSoundFX !== 'undefined') {
             window.novaSoundFXInstance = new NovaSoundFX();
         }

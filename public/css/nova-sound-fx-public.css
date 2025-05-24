@@ -1,63 +1,112 @@
 /**
- * Nova Sound FX Public Styles
+ * Nova Sound FX Public Styles - Versión Mejorada
+ * Estilos para efectos visuales y controles de usuario
  */
 
-/* Audio preload container (hidden) */
-.nova-sound-fx-preload {
-    position: absolute;
-    left: -9999px;
-    visibility: hidden;
+/* Variables CSS */
+:root {
+    --nova-fx-primary: #007cba;
+    --nova-fx-primary-dark: #005a87;
+    --nova-fx-success: #00a32a;
+    --nova-fx-bg: rgba(255, 255, 255, 0.95);
+    --nova-fx-text: #1e1e1e;
+    --nova-fx-border: rgba(0, 0, 0, 0.1);
 }
 
-/* Sound effect indicators */
+/* Elementos con sonido activo */
 .nova-sound-fx-active {
     position: relative;
+    transition: transform 0.2s ease;
 }
 
-.nova-sound-fx-active::after {
-    content: '🔊';
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 12px;
+/* Efectos visuales al reproducir sonido */
+.nova-sound-playing {
+    animation: novaPulse 0.5s ease;
+}
+
+@keyframes novaPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Efectos específicos por tipo de evento */
+.nova-sound-playing-hover {
+    filter: brightness(1.1);
+}
+
+.nova-sound-playing-click {
+    animation: novaClick 0.3s ease;
+}
+
+@keyframes novaClick {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.nova-sound-playing-active {
+    transform: scale(0.98);
+    filter: brightness(0.95);
+}
+
+/* Indicador de onda de sonido */
+.nova-sound-wave {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
-.nova-sound-fx-active:hover::after {
-    opacity: 0.5;
+.nova-sound-wave.active {
+    opacity: 1;
 }
 
-/* Loading state for sounds */
-.nova-sound-loading {
-    cursor: wait !important;
+.nova-sound-wave span {
+    display: block;
+    width: 3px;
+    height: 20px;
+    background: var(--nova-fx-primary);
+    border-radius: 2px;
+    animation: novaWave 0.8s ease-in-out infinite;
 }
 
-/* Visual feedback for sound playback */
-@keyframes nova-sound-pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+.nova-sound-wave span:nth-child(1) { animation-delay: 0s; }
+.nova-sound-wave span:nth-child(2) { animation-delay: 0.1s; }
+.nova-sound-wave span:nth-child(3) { animation-delay: 0.2s; }
+.nova-sound-wave span:nth-child(4) { animation-delay: 0.3s; }
+.nova-sound-wave span:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes novaWave {
+    0%, 100% {
+        transform: scaleY(0.5);
     }
-    70% {
-        box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    50% {
+        transform: scaleY(1);
     }
 }
 
-.nova-sound-playing {
-    animation: nova-sound-pulse 0.5s ease-out;
-}
-
-/* Page transition overlay */
+/* Overlay de transición de página */
 .nova-page-transition-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
     z-index: 99999;
     opacity: 0;
     pointer-events: none;
@@ -66,131 +115,234 @@
 
 .nova-page-transition-overlay.active {
     opacity: 1;
-    pointer-events: all;
+    pointer-events: auto;
 }
 
-/* Sound wave animation for visual feedback */
-.nova-sound-wave {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
+.nova-page-transition-overlay::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 40px;
     height: 40px;
-    display: none;
-    z-index: 9999;
+    margin: -20px 0 0 -20px;
+    border: 3px solid var(--nova-fx-primary);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: novaSpin 1s linear infinite;
 }
 
-.nova-sound-wave.active {
-    display: block;
-}
-
-.nova-sound-wave span {
-    display: inline-block;
-    width: 3px;
-    height: 100%;
-    background: #007cba;
-    margin: 0 2px;
-    animation: nova-wave 1s ease-in-out infinite;
-}
-
-.nova-sound-wave span:nth-child(2) {
-    animation-delay: -0.9s;
-}
-
-.nova-sound-wave span:nth-child(3) {
-    animation-delay: -0.8s;
-}
-
-.nova-sound-wave span:nth-child(4) {
-    animation-delay: -0.7s;
-}
-
-.nova-sound-wave span:nth-child(5) {
-    animation-delay: -0.6s;
-}
-
-@keyframes nova-wave {
-    0%, 40%, 100% {
-        transform: scaleY(0.4);
-    }
-    20% {
-        transform: scaleY(1);
+@keyframes novaSpin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
-/* Accessibility - Reduced motion */
+/* Controles de usuario - Ya definidos en shortcode */
+/* Agregamos estilos adicionales para la animación de entrada */
+.nova-sound-fx-controls.nova-controls-enter {
+    animation: novaControlsSlideIn 0.5s ease;
+}
+
+@keyframes novaControlsSlideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Botones con efecto hover mejorado */
+.nova-control-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.nova-control-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 124, 186, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.nova-control-btn:hover::before {
+    width: 40px;
+    height: 40px;
+}
+
+/* Estado colapsado para controles mínimos */
+.nova-sound-fx-controls.nova-style-minimal.nova-collapsed .nova-controls-wrapper {
+    width: auto;
+}
+
+.nova-sound-fx-controls.nova-style-minimal.nova-collapsed .nova-expand-btn {
+    animation: novaPulseIcon 2s ease-in-out infinite;
+}
+
+@keyframes novaPulseIcon {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Notificaciones mejoradas */
+.nova-notification {
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.nova-notification.nova-show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Estilos para tema oscuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --nova-fx-bg: rgba(30, 30, 30, 0.95);
+        --nova-fx-text: #ffffff;
+        --nova-fx-border: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nova-page-transition-overlay {
+        background: rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* Accesibilidad - Reducir movimiento */
 @media (prefers-reduced-motion: reduce) {
-    .nova-sound-fx-active::after,
+    .nova-sound-fx-active,
     .nova-sound-playing,
-    .nova-page-transition-overlay,
-    .nova-sound-wave {
+    .nova-sound-wave,
+    .nova-control-btn,
+    .nova-notification {
         animation: none !important;
         transition: none !important;
     }
-}
-
-/* Mobile optimizations */
-@media (max-width: 768px) {
-    .nova-sound-wave {
-        bottom: 10px;
-        left: 10px;
-        width: 30px;
-        height: 30px;
-    }
     
-    .nova-sound-wave span {
-        width: 2px;
-        margin: 0 1px;
+    .nova-sound-wave {
+        display: none;
     }
 }
 
-/* Debug mode styles */
-body.nova-sound-fx-debug .nova-sound-fx-active {
-    outline: 2px dashed #007cba !important;
+/* Indicadores visuales para elementos con sonido */
+.nova-sound-fx-active[data-nova-sound-event="hover"]:hover::after,
+.nova-sound-fx-active[data-nova-sound-event="click"]:active::after {
+    content: '🔊';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 12px;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.7;
 }
 
-body.nova-sound-fx-debug .nova-sound-fx-active::before {
+/* Soporte para modo de vista previa */
+body.nova-sound-fx-preview .nova-sound-fx-active {
+    outline: 2px dashed var(--nova-fx-primary);
+    outline-offset: 3px;
+}
+
+body.nova-sound-fx-preview .nova-sound-fx-active::before {
     content: attr(data-nova-sound-event);
     position: absolute;
-    top: -20px;
+    top: -25px;
     left: 0;
-    font-size: 10px;
-    background: #007cba;
+    background: var(--nova-fx-primary);
     color: white;
-    padding: 2px 5px;
+    padding: 2px 8px;
     border-radius: 3px;
-    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 600;
     z-index: 9999;
+    pointer-events: none;
 }
 
-/* Sound control widget animations */
-.nova-controls-enter {
-    animation: nova-controls-enter 0.3s ease-out;
-}
-
-@keyframes nova-controls-enter {
-    from {
-        opacity: 0;
+/* Responsive móvil */
+@media (max-width: 768px) {
+    .nova-sound-wave {
+        transform: scale(0.8);
+    }
+    
+    .nova-sound-fx-controls {
         transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
+        transform-origin: bottom right;
     }
 }
 
-/* Focus styles for accessibility */
-.nova-sound-fx-active:focus {
-    outline: 2px solid #007cba;
-    outline-offset: 2px;
+/* Mejoras de rendimiento */
+.nova-sound-fx-active * {
+    pointer-events: none;
 }
 
-/* Print styles - hide sound indicators */
-@media print {
-    .nova-sound-fx-active::after,
-    .nova-sound-wave,
-    .nova-sound-fx-controls,
-    .nova-page-transition-overlay {
-        display: none !important;
+.nova-sound-fx-active {
+    pointer-events: auto;
+}
+
+/* Compatibilidad con diferentes temas de WordPress */
+.nova-sound-fx-controls button,
+.nova-sound-fx-controls input {
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* Z-index para asegurar que los controles estén siempre visibles */
+.nova-sound-fx-controls {
+    z-index: 99999;
+}
+
+.nova-sound-wave {
+    z-index: 99998;
+}
+
+/* Estilos para debugging (ocultos por defecto) */
+.nova-sound-fx-debug {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    display: none;
+}
+
+body.nova-sound-fx-debug-mode .nova-sound-fx-debug {
+    display: block;
+}
+
+/* Animación suave para elementos con sonido */
+.nova-sound-fx-active {
+    will-change: transform;
+}
+
+/* Mejora visual para elementos interactivos */
+.nova-sound-fx-active[data-nova-sound-event="hover"],
+.nova-sound-fx-active[data-nova-sound-event="click"],
+.nova-sound-fx-active[data-nova-sound-event="active"] {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Retroalimentación táctil en móviles */
+@media (hover: none) {
+    .nova-sound-fx-active:active {
+        opacity: 0.8;
     }
 }

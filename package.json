@@ -1,7 +1,7 @@
 {
   "name": "nova-sound-fx",
   "version": "1.0.0",
-  "description": "Add immersive sound effects to your WordPress website with CSS selectors and page transitions",
+  "description": "Nova Sound FX WordPress Plugin",
   "main": "index.js",
   "scripts": {
     "build": "wp-scripts build",
@@ -9,47 +9,26 @@
     "lint:js": "wp-scripts lint-js",
     "lint:css": "wp-scripts lint-style",
     "lint": "npm run lint:js && npm run lint:css",
-    "format": "wp-scripts format",
-    "test": "wp-scripts test-unit-js",
-    "env:start": "wp-env start",
-    "env:stop": "wp-env stop",
-    "env:clean": "wp-env clean",
-    "package": "npm run build && npm run create-zip",
-    "create-zip": "wp-scripts plugin-zip"
+    "format:js": "wp-scripts format-js",
+    "packages-update": "wp-scripts packages-update",
+    "zip": "wp-scripts plugin-zip"
   },
   "keywords": [
     "wordpress",
     "plugin",
     "sound",
     "effects",
-    "audio",
-    "ux",
-    "interactive"
+    "audio"
   ],
-  "author": "Your Name",
+  "author": "Nova Developer",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
     "@wordpress/scripts": "^26.0.0",
-    "@wordpress/env": "^8.0.0",
-    "@wordpress/eslint-plugin": "^14.0.0"
-  },
-  "dependencies": {
     "@wordpress/blocks": "^12.0.0",
+    "@wordpress/block-editor": "^12.0.0",
     "@wordpress/components": "^25.0.0",
     "@wordpress/element": "^5.0.0",
     "@wordpress/i18n": "^4.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
-  "wp-env": {
-    "plugins": [
-      "."
-    ],
-    "themes": [
-      "https://downloads.wordpress.org/theme/twentytwentythree.latest-stable.zip"
-    ]
-  }
+  "dependencies": {}
 }

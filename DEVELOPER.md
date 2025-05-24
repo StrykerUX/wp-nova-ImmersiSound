@@ -1,311 +1,502 @@
-# Nova Sound FX - Developer Documentation
+# Guía del Desarrollador - Nova Sound FX
 
-## Plugin Architecture
+## Arquitectura del Plugin
 
-The Nova Sound FX plugin follows WordPress coding standards and uses an object-oriented approach with the following main classes:
+Nova Sound FX sigue la arquitectura estándar de plugins de WordPress con un enfoque orientado a objetos.
 
-### Core Classes
+### Estructura de Directorios
 
-1. **Nova_Sound_FX** - Main plugin class that initializes all components
-2. **Nova_Sound_FX_Admin** - Handles all admin functionality
-3. **Nova_Sound_FX_Public** - Handles frontend functionality
-4. **Nova_Sound_FX_Shortcodes** - Manages shortcode rendering
-5. **Nova_Sound_FX_Ajax** - Handles all AJAX requests
-6. **Nova_Sound_FX_Utils** - Utility functions and helpers
-7. **Nova_Sound_FX_Blocks** - Gutenberg block integration
+```
+nova-sound-fx/
+├── admin/               # Assets y funcionalidad del admin
+│   ├── css/            # Estilos del panel de administración
+│   └── js/             # Scripts del panel de administración
+├── includes/           # Clases principales del plugin
+├── languages/          # Archivos de traducción
+├── public/             # Assets y funcionalidad del frontend
+│   ├── css/           # Estilos del frontend
+│   └── js/            # Scripts del frontend
+├── nova-sound-fx.php   # Archivo principal del plugin
+└── uninstall.php      # Script de desinstalación
+```
 
-## Database Schema
+### Clases Principales
 
-### Table: {prefix}_nova_sound_fx_css_mappings
+- **Nova_Sound_FX**: Clase principal que inicializa el plugin
+- **Nova_Sound_FX_Admin**: Maneja toda la funcionalidad del admin
+- **Nova_Sound_FX_Public**: Maneja la funcionalidad del frontend
+- **Nova_Sound_FX_Shortcodes**: Gestiona los shortcodes
+- **Nova_Sound_FX_Ajax**: Maneja las peticiones AJAX
+- **Nova_Sound_FX_Utils**: Funciones de utilidad
+- **Nova_Sound_FX_Blocks**: Integración con Gutenberg
 
-| Field | Type | Description |
-|-------|------|-------------|
-| id | mediumint(9) | Primary key |
-| css_selector | varchar(255) | CSS selector string |
-| event_type | varchar(50) | Event type (hover, click, etc.) |
-| sound_id | mediumint(9) | WordPress attachment ID |
-| volume | int(3) | Volume level (0-100) |
-| delay | int(5) | Delay in milliseconds |
-| created_at | datetime | Creation timestamp |
+## Base de Datos
 
-### Table: {prefix}_nova_sound_fx_transitions
+### Tablas Personalizadas
 
-| Field | Type | Description |
-|-------|------|-------------|
-| id | mediumint(9) | Primary key |
-| url_pattern | varchar(255) | URL pattern with wildcards or regex |
-| transition_type | varchar(50) | Type (enter, exit, both) |
-| sound_id | mediumint(9) | WordPress attachment ID |
-| volume | int(3) | Volume level (0-100) |
-| priority | int(3) | Priority for pattern matching |
-| created_at | datetime | Creation timestamp |
+#### nova_sound_fx_css_mappings
+```sql
+- id (mediumint)
+- css_selector (varchar 255)
+- event_type (varchar 50)
+- sound_id (mediumint)
+- volume (int)
+- delay (int)
+- created_at (datetime)
+```
 
-## JavaScript API
+#### nova_sound_fx_transitions
+```sql
+- id (mediumint)
+- url_pattern (varchar 255)
+- transition_type (varchar 50)
+- sound_id (mediumint)
+- volume (int)
+- priority (int)
+- created_at (datetime)
+```
 
-### Global Object: window.NovaSoundFX
+## API JavaScript
+
+### Objeto Global NovaSoundFX
 
 ```javascript
-// Play a sound
-window.NovaSoundFX.play(soundUrl, {
-    volume: 0.5,      // 0-1
-    element: element  // Optional DOM element for visual feedback
-});
-
-// Volume control
-window.NovaSoundFX.setVolume(50);     // 0-100
-window.NovaSoundFX.getVolume();       // Returns current volume
-
-// Mute control
-window.NovaSoundFX.mute();
-window.NovaSoundFX.unmute();
-window.NovaSoundFX.isMuted();         // Returns boolean
-
-// Save preferences
-window.NovaSoundFX.savePreferences();
+window.NovaSoundFX = {
+    // Reproducir sonido
+    play: function(url, options) {},
+    
+    // Control de volumen
+    setVolume: function(volume) {},
+    mute: function() {},
+    unmute: function() {},
+    
+    // Estado
+    isMuted: function() {},
+    getVolume: function() {},
+    
+    // Preferencias
+    savePreferences: function() {},
+    
+    // Recarga dinámica
+    reload: function() {}
+}
 ```
 
-### Events
+### Eventos Personalizados
 
 ```javascript
-// Preferences saved
-jQuery(document).on('nova-sound-fx:preferences-saved', function(e, preferences) {
-    console.log('New preferences:', preferences);
+// Preferencias guardadas
+$(document).on('nova-sound-fx:preferences-saved', function(event, preferences) {
+    console.log('Nuevas preferencias:', preferences);
 });
 
-// Sound played
-jQuery(document).on('nova-sound-fx:sound-played', function(e, data) {
-    console.log('Sound played:', data.url);
-});
-```
-
-## PHP Hooks
-
-### Filters
-
-```php
-// Modify CSS mappings before output
-add_filter('nova_sound_fx_css_mappings', function($mappings) {
-    // Modify mappings
-    return $mappings;
-});
-
-// Modify transitions before output
-add_filter('nova_sound_fx_transitions', function($transitions) {
-    // Modify transitions
-    return $transitions;
-});
-
-// Modify sound data before frontend output
-add_filter('nova_sound_fx_sound_data', function($data) {
-    // Modify data
-    return $data;
-});
-
-// Customize default user preferences
-add_filter('nova_sound_fx_default_preferences', function($preferences) {
-    $preferences['volume'] = 75;
-    return $preferences;
-});
-
-// Modify supported mime types
-add_filter('nova_sound_fx_mime_types', function($types) {
-    $types[] = 'audio/aac';
-    return $types;
+// Sonido reproducido
+$(document).on('nova-sound-fx:sound-played', function(event, data) {
+    console.log('Sonido reproducido:', data);
 });
 ```
 
-### Actions
+## Hooks y Filtros
+
+### Acciones (Actions)
 
 ```php
-// After CSS mapping saved
+// Después de guardar un mapeo CSS
 do_action('nova_sound_fx_mapping_saved', $mapping_id, $data);
 
-// After CSS mapping deleted
-do_action('nova_sound_fx_mapping_deleted', $mapping_id);
-
-// After transition saved
+// Después de guardar una transición
 do_action('nova_sound_fx_transition_saved', $transition_id, $data);
 
-// After transition deleted
-do_action('nova_sound_fx_transition_deleted', $transition_id);
+// Antes de reproducir un sonido (frontend)
+do_action('nova_sound_fx_before_play', $sound_id, $context);
+```
 
-// After settings saved
-do_action('nova_sound_fx_settings_saved', $settings);
+### Filtros (Filters)
 
-// When usage is tracked
-do_action('nova_sound_fx_usage_tracked', $event_data);
+```php
+// Modificar configuraciones antes de guardar
+$settings = apply_filters('nova_sound_fx_settings', $settings);
+
+// Modificar datos de mapeo antes de guardar
+$mapping_data = apply_filters('nova_sound_fx_mapping_data', $data);
+
+// Modificar selectores CSS permitidos
+$allowed = apply_filters('nova_sound_fx_allowed_selectors', $pattern);
+
+// Modificar tipos de evento disponibles
+$events = apply_filters('nova_sound_fx_event_types', $default_events);
+```
+
+## Desarrollo de Extensiones
+
+### Crear un Addon
+
+```php
+// my-nova-addon.php
+class My_Nova_Addon {
+    
+    public function __construct() {
+        add_action('init', array($this, 'init'));
+    }
+    
+    public function init() {
+        // Verificar que Nova Sound FX esté activo
+        if (!class_exists('Nova_Sound_FX')) {
+            return;
+        }
+        
+        // Agregar nuevo tipo de evento
+        add_filter('nova_sound_fx_event_types', array($this, 'add_custom_events'));
+        
+        // Agregar campos personalizados
+        add_action('nova_sound_fx_mapping_fields', array($this, 'add_custom_fields'));
+    }
+    
+    public function add_custom_events($events) {
+        $events['double-click'] = __('Doble Click', 'my-addon');
+        $events['long-press'] = __('Presión Larga', 'my-addon');
+        return $events;
+    }
+}
+
+new My_Nova_Addon();
+```
+
+### Integración con Temas
+
+```php
+// functions.php del tema
+class My_Theme_Nova_Integration {
+    
+    public function __construct() {
+        add_action('after_setup_theme', array($this, 'setup'));
+    }
+    
+    public function setup() {
+        // Agregar soporte
+        add_theme_support('nova-sound-fx');
+        
+        // Personalizar carga de scripts
+        add_filter('nova_sound_fx_load_scripts', array($this, 'conditional_load'));
+        
+        // Agregar sonidos predeterminados del tema
+        add_action('nova_sound_fx_default_sounds', array($this, 'register_theme_sounds'));
+    }
+    
+    public function conditional_load($load) {
+        // Solo cargar en páginas específicas
+        if (is_page_template('interactive-template.php')) {
+            return true;
+        }
+        return $load;
+    }
+    
+    public function register_theme_sounds() {
+        // Registrar sonidos del tema
+        nova_sound_fx_register_sound(array(
+            'id' => 'theme-click',
+            'url' => get_template_directory_uri() . '/sounds/click.mp3',
+            'title' => 'Theme Click Sound'
+        ));
+    }
+}
 ```
 
 ## AJAX Endpoints
 
-### Admin Endpoints (require admin capabilities)
-
-- `nova_sound_fx_save_css_mapping` - Save CSS mapping
-- `nova_sound_fx_delete_css_mapping` - Delete CSS mapping
-- `nova_sound_fx_save_transition` - Save page transition
-- `nova_sound_fx_delete_transition` - Delete page transition
-- `nova_sound_fx_get_sound_library` - Get all sounds
-- `nova_sound_fx_save_settings` - Save plugin settings
-
-### Public Endpoints
-
-- `nova_sound_fx_get_sounds` - Get sounds for frontend
-- `nova_sound_fx_log_error` - Log JavaScript errors
-- `nova_sound_fx_track_usage` - Track sound usage
-
-## Creating Custom Integrations
-
-### Example: WooCommerce Integration
-
-```php
-// Add sound to add-to-cart button
-add_action('init', function() {
-    if (!class_exists('Nova_Sound_FX')) {
-        return;
-    }
-    
-    // Add mapping for WooCommerce buttons
-    Nova_Sound_FX::save_css_mapping(array(
-        'css_selector' => '.add_to_cart_button',
-        'event_type' => 'click',
-        'sound_id' => 123, // Your sound ID
-        'volume' => 80,
-        'delay' => 0
-    ));
-});
-```
-
-### Example: Custom Sound Trigger
+### Admin AJAX
 
 ```javascript
-// Trigger sound on custom event
-document.addEventListener('my-custom-event', function(e) {
-    if (window.NovaSoundFX) {
-        window.NovaSoundFX.play('/path/to/sound.mp3', {
-            volume: 0.7,
-            element: e.target
-        });
+// Obtener biblioteca de sonidos
+$.ajax({
+    url: nova_sound_fx_admin.ajax_url,
+    type: 'POST',
+    data: {
+        action: 'nova_sound_fx_get_sound_library',
+        nonce: nova_sound_fx_admin.nonce
+    },
+    success: function(response) {
+        console.log(response.data);
+    }
+});
+
+// Guardar mapeo CSS
+$.ajax({
+    url: nova_sound_fx_admin.ajax_url,
+    type: 'POST',
+    data: {
+        action: 'nova_sound_fx_save_css_mapping',
+        nonce: nova_sound_fx_admin.nonce,
+        css_selector: '.mi-clase',
+        event_type: 'click',
+        sound_id: 123,
+        volume: 80,
+        delay: 0
     }
 });
 ```
 
-## Gutenberg Blocks
-
-### Sound Button Block
-
-```
-<!-- wp:nova-sound-fx/sound-button {
-    "text":"Play Sound",
-    "soundId":123,
-    "volume":80,
-    "align":"center"
-} /-->
-```
-
-### Sound Controls Block
-
-```
-<!-- wp:nova-sound-fx/sound-controls {
-    "style":"floating",
-    "position":"bottom-right",
-    "theme":"dark",
-    "showVolume":true,
-    "showSave":true
-} /-->
-```
-
-## Performance Optimization
-
-### Preloading
-
-The plugin automatically preloads the first 5 sounds. To modify:
+### Public AJAX
 
 ```javascript
-// In nova-sound-fx-public.js
-preloadSounds() {
-    // Modify the slice value to preload more/fewer sounds
-    const soundUrls = Object.values(this.sounds).slice(0, 10);
-}
-```
-
-### Lazy Loading
-
-Sounds are loaded on-demand using the Web Audio API. To implement custom caching:
-
-```javascript
-// Custom cache implementation
-const soundCache = new Map();
-
-function loadSoundWithCache(url) {
-    if (soundCache.has(url)) {
-        return Promise.resolve(soundCache.get(url));
+// Obtener sonidos para el frontend
+$.ajax({
+    url: novaSoundFX.ajaxUrl,
+    type: 'POST',
+    data: {
+        action: 'nova_sound_fx_get_sounds',
+        nonce: novaSoundFX.nonce
     }
-    
-    return fetch(url)
-        .then(response => response.arrayBuffer())
-        .then(buffer => {
-            soundCache.set(url, buffer);
-            return buffer;
-        });
-}
+});
 ```
 
-## Security Considerations
+## Guía de Estilo de Código
 
-1. All AJAX requests use nonces for security
-2. Capability checks are performed for admin actions
-3. Input is sanitized using WordPress functions
-4. CSS selectors are validated before storage
-5. File uploads use WordPress Media Library
+### PHP
 
-## Debugging
-
-### Enable Debug Mode
+- Seguir [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/)
+- Usar PHPDoc para todas las funciones y clases
+- Prefijo `nova_sound_fx_` para funciones globales
+- Validar y sanitizar todas las entradas
 
 ```php
-// In wp-config.php
+/**
+ * Guardar configuración de sonido
+ *
+ * @param array $data Datos del sonido
+ * @return int|WP_Error ID del sonido o error
+ */
+function nova_sound_fx_save_sound($data) {
+    // Validar datos
+    if (empty($data['url'])) {
+        return new WP_Error('missing_url', __('URL requerida', 'nova-sound-fx'));
+    }
+    
+    // Sanitizar
+    $clean_data = array(
+        'url' => esc_url_raw($data['url']),
+        'title' => sanitize_text_field($data['title']),
+        'volume' => absint($data['volume'])
+    );
+    
+    // Guardar
+    return wp_insert_post($clean_data);
+}
+```
+
+### JavaScript
+
+- Usar closures para evitar contaminar el scope global
+- Documentar con JSDoc
+- Manejar errores apropiadamente
+
+```javascript
+/**
+ * Módulo de gestión de sonidos
+ * @namespace NovaSoundManager
+ */
+(function($) {
+    'use strict';
+    
+    const NovaSoundManager = {
+        /**
+         * Inicializar módulo
+         * @returns {void}
+         */
+        init: function() {
+            this.bindEvents();
+            this.loadSounds();
+        },
+        
+        /**
+         * Cargar sonidos desde el servidor
+         * @returns {Promise}
+         */
+        loadSounds: async function() {
+            try {
+                const response = await $.ajax({
+                    url: novaSoundFX.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'nova_sound_fx_get_sounds',
+                        nonce: novaSoundFX.nonce
+                    }
+                });
+                
+                return response.data;
+            } catch (error) {
+                console.error('Error loading sounds:', error);
+                return [];
+            }
+        }
+    };
+    
+    // Inicializar cuando DOM esté listo
+    $(document).ready(() => NovaSoundManager.init());
+    
+})(jQuery);
+```
+
+## Testing
+
+### Unit Tests
+
+```php
+// tests/test-nova-sound-fx.php
+class Test_Nova_Sound_FX extends WP_UnitTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        // Activar plugin
+        activate_plugin('nova-sound-fx/nova-sound-fx.php');
+    }
+    
+    public function test_tables_created() {
+        global $wpdb;
+        $table = $wpdb->prefix . 'nova_sound_fx_css_mappings';
+        $this->assertEquals($table, $wpdb->get_var("SHOW TABLES LIKE '$table'"));
+    }
+    
+    public function test_save_mapping() {
+        $data = array(
+            'css_selector' => '.test-button',
+            'event_type' => 'click',
+            'sound_id' => 123,
+            'volume' => 80,
+            'delay' => 0
+        );
+        
+        $result = Nova_Sound_FX::save_css_mapping($data);
+        $this->assertNotFalse($result);
+    }
+}
+```
+
+### Ejecutar Tests
+
+```bash
+# PHPUnit
+composer test
+
+# JavaScript
+npm test
+
+# Linting
+composer check-cs
+npm run lint
+```
+
+## Depuración
+
+### Habilitar Modo Debug
+
+```php
+// wp-config.php
 define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
+define('WP_DEBUG_DISPLAY', false);
 define('NOVA_SOUND_FX_DEBUG', true);
 ```
 
-### JavaScript Console
+### Logs Personalizados
 
-```javascript
-// Enable verbose logging
-window.novaSoundFXDebug = true;
+```php
+// Usar la utilidad de logging
+Nova_Sound_FX_Utils::log('Mensaje de debug', 'info');
+Nova_Sound_FX_Utils::log($data_array, 'debug');
+Nova_Sound_FX_Utils::log('Error crítico', 'error');
 ```
 
-### Log Files
-
-- Error log: `/wp-content/nova-sound-fx-errors.log`
-- Debug log: `/wp-content/nova-sound-fx-debug.log`
-
-## Browser Compatibility
-
-The plugin uses feature detection and provides fallbacks:
+### Console Debugging (JavaScript)
 
 ```javascript
-// Web Audio API with fallback
-if (window.AudioContext || window.webkitAudioContext) {
-    // Use Web Audio API
-} else {
-    // Fallback to HTML5 Audio
+// Habilitar modo debug
+window.NOVA_SOUND_FX_DEBUG = true;
+
+// Los logs aparecerán en la consola
+if (window.NOVA_SOUND_FX_DEBUG) {
+    console.log('[Nova Sound FX]', 'Debug info', data);
 }
 ```
 
-## Contributing
+## Optimización
 
-1. Follow WordPress Coding Standards
-2. Use proper sanitization and escaping
-3. Add inline documentation
-4. Test on multiple browsers
-5. Ensure accessibility compliance
+### Caché de Sonidos
 
-## License
+```php
+// Implementar caché para consultas frecuentes
+function nova_sound_fx_get_cached_mappings() {
+    $cache_key = 'nova_sound_fx_mappings';
+    $mappings = wp_cache_get($cache_key);
+    
+    if (false === $mappings) {
+        $mappings = Nova_Sound_FX::get_css_mappings();
+        wp_cache_set($cache_key, $mappings, '', HOUR_IN_SECONDS);
+    }
+    
+    return $mappings;
+}
+```
 
-GPL v2 or later - Same as WordPress
+### Lazy Loading de Assets
 
-## Support
+```javascript
+// Cargar sonidos solo cuando se necesiten
+class LazyAudioLoader {
+    constructor() {
+        this.loaded = new Map();
+    }
+    
+    async load(url) {
+        if (this.loaded.has(url)) {
+            return this.loaded.get(url);
+        }
+        
+        const audio = new Audio(url);
+        await audio.load();
+        this.loaded.set(url, audio);
+        
+        return audio;
+    }
+}
+```
 
-For bug reports and feature requests, please use the GitHub issue tracker.
+## Seguridad
+
+### Validación de Entrada
+
+```php
+// Siempre validar selectores CSS
+if (!Nova_Sound_FX_Utils::validate_css_selector($selector)) {
+    wp_die(__('Selector CSS inválido', 'nova-sound-fx'));
+}
+
+// Verificar capacidades
+if (!current_user_can('manage_options')) {
+    wp_die(__('Permisos insuficientes', 'nova-sound-fx'));
+}
+
+// Verificar nonces
+check_ajax_referer('nova_sound_fx_admin', 'nonce');
+```
+
+### Escape de Salida
+
+```php
+// Siempre escapar datos antes de mostrar
+echo esc_html($user_input);
+echo esc_attr($attribute);
+echo esc_url($url);
+echo esc_js($javascript_data);
+```
+
+## Recursos
+
+- [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
+- [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/)
+- [Web Audio API Documentation](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [WordPress Security Best Practices](https://developer.wordpress.org/plugins/security/)
+
+---
+
+¿Preguntas? Abre un issue en GitHub o contacta al equipo de desarrollo.
