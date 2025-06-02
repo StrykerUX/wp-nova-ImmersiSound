@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Nova Sound FX
- * Plugin URI: https://github.com/yourusername/nova-sound-fx
+ * Plugin URI: https://github.com/StrykerUX/
  * Description: Add immersive sound effects to your WordPress site with CSS selectors and page transitions
- * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
- * License: GPL v2 or later
+ * Version: 0.8.3
+ * Author: Stryker
+ * Author URI: https://imstryker.com
+ * License: GPL v2
  * Text Domain: nova-sound-fx
  * Domain Path: /languages
  */
