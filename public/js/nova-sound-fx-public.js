@@ -212,6 +212,14 @@
                 element.classList.add('nova-sound-fx-active');
                 element.setAttribute('data-nova-sound-event', mapping.event_type);
                 
+                // Agregar clases condicionales según opciones
+                if (mapping.show_visual_effect) {
+                    element.classList.add('nova-visual-enabled');
+                }
+                if (mapping.show_speaker_icon) {
+                    element.classList.add('nova-speaker-enabled');
+                }
+                
                 // Crear manejador de eventos
                 const handler = (e) => {
                     this.handleSoundEvent(e, mapping);
@@ -269,10 +277,8 @@
                     element.addEventListener(eventName, handler);
                 });
                 
-                // Agregar indicador visual opcional
-                if (mapping.event_type === 'hover' || mapping.event_type === 'active') {
-                    element.style.cursor = 'pointer';
-                }
+                // No agregar estilos CSS automáticamente para evitar conflictos
+                // Los desarrolladores pueden agregar sus propios estilos si lo desean
             });
         }
         
@@ -353,18 +359,18 @@
                 source.connect(gainNode);
                 gainNode.connect(this.masterGain);
                 
-                // Agregar retroalimentación visual
-                if (options.element) {
+                // Agregar retroalimentación visual solo si está habilitada
+                if (options.element && options.mapping && options.mapping.show_visual_effect) {
                     options.element.classList.add('nova-sound-playing');
                     
                     // Agregar clase específica del evento
-                    if (options.mapping && options.mapping.event_type) {
+                    if (options.mapping.event_type) {
                         options.element.classList.add(`nova-sound-playing-${options.mapping.event_type}`);
                     }
                     
                     source.onended = () => {
                         options.element.classList.remove('nova-sound-playing');
-                        if (options.mapping && options.mapping.event_type) {
+                        if (options.mapping.event_type) {
                             options.element.classList.remove(`nova-sound-playing-${options.mapping.event_type}`);
                         }
                     };
@@ -373,8 +379,9 @@
                 // Reproducir sonido
                 source.start(0);
                 
-                // Mostrar indicador visual
-                if (this.settings.show_visual_feedback !== false) {
+                // Mostrar indicador visual solo si está habilitado globalmente y en el mapeo
+                if (this.settings.show_visual_feedback !== false && 
+                    options.mapping && options.mapping.show_visual_effect) {
                     this.showSoundWave(options.element);
                 }
                 

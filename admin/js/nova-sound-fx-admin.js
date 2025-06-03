@@ -42,6 +42,15 @@
             const url = new URL(window.location);
             url.searchParams.set('tab', tabId);
             window.history.pushState({}, '', url);
+            
+            // Recargar datos cuando se cambia a la pestaña de mapeos CSS
+            if (tabId === 'css-mapping') {
+                loadCSSMappings();
+            } else if (tabId === 'page-transitions') {
+                loadTransitions();
+            } else if (tabId === 'sound-library') {
+                loadSoundLibrary();
+            }
         });
 
         // Cargar pestaña desde URL
@@ -173,6 +182,7 @@
      * Cargar mapeos CSS desde la base de datos
      */
     function loadCSSMappings() {
+        console.log('Cargando mapeos CSS...');
         $.ajax({
             url: nova_sound_fx_admin.ajax_url,
             type: 'POST',
@@ -181,9 +191,15 @@
                 nonce: nova_sound_fx_admin.nonce
             },
             success: function(response) {
+                console.log('Mapeos CSS recibidos:', response);
                 if (response.success) {
                     renderCSSMappings(response.data);
+                } else {
+                    console.error('Error al cargar mapeos:', response);
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX al cargar mapeos:', error);
             }
         });
     }
@@ -604,6 +620,8 @@
             $('#mapping-sound').val(mapping.sound_id);
             $('#mapping-volume').val(mapping.volume);
             $('#mapping-delay').val(mapping.delay);
+            $('#show-visual-effect').prop('checked', mapping.show_visual_effect == 1);
+            $('#show-speaker-icon').prop('checked', mapping.show_speaker_icon == 1);
             
             // Actualizar visualizaciones
             $('#mapping-volume').siblings('.volume-value').text(mapping.volume + '%');
@@ -614,6 +632,8 @@
             $('#mapping-id').val('');
             $('#mapping-volume').val(100);
             $('#mapping-volume').siblings('.volume-value').text('100%');
+            $('#show-visual-effect').prop('checked', true);
+            $('#show-speaker-icon').prop('checked', true);
         }
         
         $modal.fadeIn();
@@ -742,7 +762,9 @@
             event_type: $('#event-type').val(),
             sound_id: $('#mapping-sound').val(),
             volume: $('#mapping-volume').val(),
-            delay: $('#mapping-delay').val()
+            delay: $('#mapping-delay').val(),
+            show_visual_effect: $('#show-visual-effect').is(':checked') ? 1 : 0,
+            show_speaker_icon: $('#show-speaker-icon').is(':checked') ? 1 : 0
         };
 
         // Validar campos requeridos

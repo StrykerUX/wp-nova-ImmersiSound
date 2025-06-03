@@ -13,14 +13,13 @@
     --nova-fx-border: rgba(0, 0, 0, 0.1);
 }
 
-/* Elementos con sonido activo */
+/* Elementos con sonido activo - No agregamos estilos por defecto para evitar conflictos */
 .nova-sound-fx-active {
     position: relative;
-    transition: transform 0.2s ease;
 }
 
-/* Efectos visuales al reproducir sonido */
-.nova-sound-playing {
+/* Efectos visuales al reproducir sonido - Solo si está habilitado */
+.nova-sound-fx-active.nova-visual-enabled.nova-sound-playing {
     animation: novaPulse 0.5s ease;
 }
 
@@ -33,12 +32,12 @@
     }
 }
 
-/* Efectos específicos por tipo de evento */
-.nova-sound-playing-hover {
+/* Efectos específicos por tipo de evento - Solo si están habilitados */
+.nova-sound-fx-active.nova-visual-enabled.nova-sound-playing-hover {
     filter: brightness(1.1);
 }
 
-.nova-sound-playing-click {
+.nova-sound-fx-active.nova-visual-enabled.nova-sound-playing-click {
     animation: novaClick 0.3s ease;
 }
 
@@ -54,7 +53,7 @@
     }
 }
 
-.nova-sound-playing-active {
+.nova-sound-fx-active.nova-visual-enabled.nova-sound-playing-active {
     transform: scale(0.98);
     filter: brightness(0.95);
 }
@@ -238,9 +237,9 @@
     }
 }
 
-/* Indicadores visuales para elementos con sonido */
-.nova-sound-fx-active[data-nova-sound-event="hover"]:hover::after,
-.nova-sound-fx-active[data-nova-sound-event="click"]:active::after {
+/* Indicadores visuales para elementos con sonido - Solo si está habilitado */
+.nova-sound-fx-active.nova-speaker-enabled[data-nova-sound-event="hover"]:hover::after,
+.nova-sound-fx-active.nova-speaker-enabled[data-nova-sound-event="click"]:active::after {
     content: '🔊';
     position: absolute;
     top: -5px;
@@ -284,14 +283,8 @@ body.nova-sound-fx-preview .nova-sound-fx-active::before {
     }
 }
 
-/* Mejoras de rendimiento */
-.nova-sound-fx-active * {
-    pointer-events: none;
-}
-
-.nova-sound-fx-active {
-    pointer-events: auto;
-}
+/* Mejoras de rendimiento - Solo aplicar a elementos internos si es necesario */
+/* Removido para evitar conflictos con menús y elementos interactivos */
 
 /* Compatibilidad con diferentes temas de WordPress */
 .nova-sound-fx-controls button,
@@ -327,17 +320,37 @@ body.nova-sound-fx-debug-mode .nova-sound-fx-debug {
     display: block;
 }
 
-/* Animación suave para elementos con sonido */
-.nova-sound-fx-active {
+/* Animación suave para elementos con sonido - Solo cuando está activo */
+.nova-sound-fx-active.nova-visual-enabled.nova-sound-playing {
     will-change: transform;
 }
 
-/* Mejora visual para elementos interactivos */
+/* Estilos opcionales - Los desarrolladores pueden agregarlos si los necesitan */
+/* 
 .nova-sound-fx-active[data-nova-sound-event="hover"],
 .nova-sound-fx-active[data-nova-sound-event="click"],
 .nova-sound-fx-active[data-nova-sound-event="active"] {
     cursor: pointer;
     user-select: none;
+}
+*/
+
+/* Prevenir conflictos con menús - Asegurar que los menús mantengan sus estilos */
+.menu-item.nova-sound-fx-active,
+.nav-link.nova-sound-fx-active,
+ul.menu .nova-sound-fx-active,
+nav .nova-sound-fx-active {
+    /* Preservar comportamiento del menú */
+    position: relative !important;
+}
+
+/* Asegurar que los pseudo-elementos del menú no se vean afectados */
+.menu-item.nova-sound-fx-active::before,
+.menu-item.nova-sound-fx-active::after,
+.nav-link.nova-sound-fx-active::before,
+.nav-link.nova-sound-fx-active::after {
+    /* Los pseudo-elementos del menú tienen prioridad */
+    z-index: 1;
 }
 
 /* Retroalimentación táctil en móviles */

@@ -284,6 +284,22 @@ class Nova_Sound_FX_Admin {
                                 <p class="description"><?php _e('Retraso antes de reproducir el sonido (en milisegundos)', 'nova-sound-fx'); ?></p>
                             </td>
                         </tr>
+                        <tr>
+                            <th><label><?php _e('Opciones Visuales', 'nova-sound-fx'); ?></label></th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" id="show-visual-effect" checked>
+                                    <?php _e('Mostrar efecto visual al reproducir sonido', 'nova-sound-fx'); ?>
+                                </label>
+                                <p class="description"><?php _e('Agrega una animación visual cuando se reproduce el sonido', 'nova-sound-fx'); ?></p>
+                                <br>
+                                <label>
+                                    <input type="checkbox" id="show-speaker-icon" checked>
+                                    <?php _e('Mostrar icono de bocina', 'nova-sound-fx'); ?>
+                                </label>
+                                <p class="description"><?php _e('Muestra un pequeño icono de bocina en elementos con sonido', 'nova-sound-fx'); ?></p>
+                            </td>
+                        </tr>
                     </table>
                     <p class="submit">
                         <button type="submit" class="button button-primary"><?php _e('Guardar Mapeo', 'nova-sound-fx'); ?></button>
@@ -441,7 +457,9 @@ class Nova_Sound_FX_Admin {
             'event_type' => sanitize_text_field($_POST['event_type']),
             'sound_id' => intval($_POST['sound_id']),
             'volume' => intval($_POST['volume']),
-            'delay' => intval($_POST['delay'])
+            'delay' => intval($_POST['delay']),
+            'show_visual_effect' => isset($_POST['show_visual_effect']) ? 1 : 0,
+            'show_speaker_icon' => isset($_POST['show_speaker_icon']) ? 1 : 0
         );
         
         // Validar que el selector sea una clase o ID
@@ -459,7 +477,7 @@ class Nova_Sound_FX_Admin {
                 $table_name,
                 $data,
                 array('id' => intval($_POST['id'])),
-                array('%s', '%s', '%d', '%d', '%d'),
+                array('%s', '%s', '%d', '%d', '%d', '%d', '%d'),
                 array('%d')
             );
             

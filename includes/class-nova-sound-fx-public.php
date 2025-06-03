@@ -141,7 +141,9 @@ class Nova_Sound_FX_Public {
                     'sound_id' => $mapping->sound_id,
                     'sound_url' => $mapping->sound_url,
                     'volume' => intval($mapping->volume),
-                    'delay' => intval($mapping->delay)
+                    'delay' => intval($mapping->delay),
+                    'show_visual_effect' => isset($mapping->show_visual_effect) ? intval($mapping->show_visual_effect) : 1,
+                    'show_speaker_icon' => isset($mapping->show_speaker_icon) ? intval($mapping->show_speaker_icon) : 1
                 );
             }
         }

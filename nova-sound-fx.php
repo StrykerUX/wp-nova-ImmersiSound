@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Nova Sound FX
- * Plugin URI: https://github.com/StrykerUX/
+ * Plugin URI: https://github.com/yourusername/nova-sound-fx
  * Description: Add immersive sound effects to your WordPress site with CSS selectors and page transitions
- * Version: 0.8.3
- * Author: Stryker
- * Author URI: https://imstryker.com
- * License: GPL v2
+ * Version: 1.1.0
+ * Author: Your Name
+ * Author URI: https://yourwebsite.com
+ * License: GPL v2 or later
  * Text Domain: nova-sound-fx
  * Domain Path: /languages
  */
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('NOVA_SOUND_FX_VERSION', '1.0.0');
+define('NOVA_SOUND_FX_VERSION', '1.1.0');
 define('NOVA_SOUND_FX_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('NOVA_SOUND_FX_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NOVA_SOUND_FX_PLUGIN_FILE', __FILE__);
@@ -63,6 +63,8 @@ function nova_sound_fx_create_tables() {
         sound_id mediumint(9) NOT NULL,
         volume int(3) DEFAULT 100,
         delay int(5) DEFAULT 0,
+        show_visual_effect tinyint(1) DEFAULT 1,
+        show_speaker_icon tinyint(1) DEFAULT 1,
         created_at datetime DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         KEY css_selector (css_selector),
@@ -100,7 +102,25 @@ require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/class-nova-sound-fx-blocks.php
 
 // Initialize the plugin
 function nova_sound_fx_init() {
+    // Check and run migrations if needed
+    nova_sound_fx_check_version();
+    
     $plugin = new Nova_Sound_FX();
     $plugin->run();
 }
 add_action('plugins_loaded', 'nova_sound_fx_init');
+
+// Check version and run migrations
+function nova_sound_fx_check_version() {
+    $installed_version = get_option('nova_sound_fx_version', '1.0.0');
+    
+    if (version_compare($installed_version, NOVA_SOUND_FX_VERSION, '<')) {
+        // Run migrations for versions between installed and current
+        if (version_compare($installed_version, '1.1.0', '<')) {
+            require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/migrations/update-1.1.0.php';
+        }
+        
+        // Update version in database
+        update_option('nova_sound_fx_version', NOVA_SOUND_FX_VERSION);
+    }
+}

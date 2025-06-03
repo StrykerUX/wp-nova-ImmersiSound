@@ -114,9 +114,11 @@ class Nova_Sound_FX {
                 'event_type' => sanitize_text_field($data['event_type']),
                 'sound_id' => intval($data['sound_id']),
                 'volume' => intval($data['volume']),
-                'delay' => intval($data['delay'])
+                'delay' => intval($data['delay']),
+                'show_visual_effect' => isset($data['show_visual_effect']) ? intval($data['show_visual_effect']) : 1,
+                'show_speaker_icon' => isset($data['show_speaker_icon']) ? intval($data['show_speaker_icon']) : 1
             ),
-            array('%s', '%s', '%d', '%d', '%d')
+            array('%s', '%s', '%d', '%d', '%d', '%d', '%d')
         );
     }
     

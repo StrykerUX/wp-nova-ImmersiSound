@@ -13,6 +13,7 @@ Plugin profesional de WordPress para agregar efectos de sonido inmersivos a tu s
 - **Múltiples Eventos**: Soporta hover, click, active, focus, blur, mouseenter, mouseleave, mousedown, mouseup
 - **Control de Volumen**: Ajuste individual de volumen para cada sonido
 - **Retraso Personalizable**: Configura retrasos antes de reproducir el sonido
+- **Opciones Visuales (v1.1.0)**: Control individual para efectos visuales y iconos de bocina por cada mapeo
 
 ### Transiciones de Página
 - **Sonidos de Entrada/Salida**: Reproduce sonidos al entrar o salir de páginas
@@ -132,7 +133,28 @@ add_filter('nova_sound_fx_sound_data', 'modificar_datos');
 - Ajusta la prioridad de carga de scripts
 - Contacta soporte con detalles del conflicto
 
+### Conflictos con estilos de menús (v1.1.0+)
+Si los efectos hover de tu menú dejan de funcionar:
+1. Desactiva las opciones visuales para ese mapeo específico
+2. El plugin ya no agrega estilos automáticos que puedan interferir
+3. Puedes agregar tus propios estilos CSS con mayor especificidad:
+
+```css
+/* Ejemplo para preservar estilos de menú */
+.menu-item.nova-sound-fx-active:hover {
+    /* Tus estilos de hover aquí */
+    background-color: #your-color !important;
+}
+```
+
 ## 📝 Changelog
+
+### v1.1.0 (2024)
+- **Nuevas Opciones de Visualización**: Control individual para efectos visuales e iconos de bocina
+- **Prevención de Conflictos CSS**: Mejorada compatibilidad con estilos de temas existentes
+- **Corrección de Bugs**: Los mapeos CSS ahora se muestran correctamente en el panel admin
+- **Sistema de Migraciones**: Agregado para futuras actualizaciones automáticas
+- **Mejoras de Rendimiento**: Optimización de selectores CSS para evitar conflictos
 
 ### v1.0.0 (2024)
 - Lanzamiento inicial con todas las características principales
