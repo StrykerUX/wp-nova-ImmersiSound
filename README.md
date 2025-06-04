@@ -4,7 +4,7 @@
 [![PHP](https://img.shields.io/badge/PHP-7.0%2B-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-Plugin profesional de WordPress para agregar efectos de sonido inmersivos a tu sitio web mediante selectores CSS y transiciones de página.
+Plugin profesional de WordPress para agregar efectos de sonido inmersivos a tu sitio web mediante selectores CSS y transiciones de página.... 
 
 ## 🎵 Características
 
