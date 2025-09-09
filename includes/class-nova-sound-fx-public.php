@@ -72,7 +72,29 @@ class Nova_Sound_FX_Public {
             'currentUrl' => $this->get_current_url(),
             'isMobile' => wp_is_mobile(),
             'sounds' => $this->get_all_sounds_data(),
-            'isPreviewMode' => !empty($settings['preview_mode']) && current_user_can('manage_options')
+            'isPreviewMode' => !empty($settings['preview_mode']) && current_user_can('manage_options'),
+            'i18n' => array(
+                'consentTitle' => __('🎵 Experiencia de Audio Mejorada', 'nova-sound-fx'),
+                'consentDescription' => __('Este sitio utiliza efectos de sonido interactivos para mejorar tu experiencia de navegación. Los sonidos se reproducirán cuando interactúes con elementos específicos de la página.', 'nova-sound-fx'),
+                'consentBenefit1' => __('Feedback inmediato en interacciones', 'nova-sound-fx'),
+                'consentBenefit2' => __('Control total del volumen', 'nova-sound-fx'),
+                'consentBenefit3' => __('Puedes desactivarlo en cualquier momento', 'nova-sound-fx'),
+                'consentAccept' => __('Activar Sonidos', 'nova-sound-fx'),
+                'consentReject' => __('Continuar en Silencio', 'nova-sound-fx'),
+                'consentRemember' => __('Recordar mi preferencia', 'nova-sound-fx'),
+                'soundsActivated' => __('¡Sonidos activados! 🎵', 'nova-sound-fx'),
+                'soundsDeactivated' => __('Sonidos desactivados. Puedes activarlos desde el control flotante.', 'nova-sound-fx'),
+                'volumeLabel' => __('Volumen', 'nova-sound-fx'),
+                'settingsTitle' => __('Configuración de Audio', 'nova-sound-fx'),
+                'resetConsent' => __('Restablecer preferencias de consentimiento', 'nova-sound-fx'),
+                'resetAll' => __('Restablecer Todo', 'nova-sound-fx'),
+                'close' => __('Cerrar', 'nova-sound-fx'),
+                'resetConfirm' => __('¿Estás seguro de que quieres restablecer todas las preferencias?', 'nova-sound-fx'),
+                'preferencesReset' => __('Preferencias restablecidas', 'nova-sound-fx'),
+                'preferencesSaved' => __('¡Preferencias guardadas!', 'nova-sound-fx'),
+                'toggleAudio' => __('Control de Audio', 'nova-sound-fx'),
+                'settings' => __('Configuración', 'nova-sound-fx')
+            )
         ));
     }
     
