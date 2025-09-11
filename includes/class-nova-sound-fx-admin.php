@@ -217,6 +217,62 @@ class Nova_Sound_FX_Admin {
                                     <p class="description"><?php _e('Habilitar sonidos solo para administradores (para pruebas)', 'nova-sound-fx'); ?></p>
                                 </td>
                             </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="show-visual-effects"><?php _e('Mostrar Efectos Visuales', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="checkbox" id="show-visual-effects" name="show_visual_effects" value="1" checked>
+                                    <p class="description"><?php _e('Mostrar ondas visuales cuando se reproducen sonidos. Útil para debugging pero puede ser molesto para usuarios finales.', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            
+                            <!-- Sección de Personalización de Diseño -->
+                            <tr>
+                                <th colspan="2"><h3><?php _e('Personalización del Diseño', 'nova-sound-fx'); ?></h3></th>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row">
+                                    <label for="border-radius"><?php _e('Border Radius Global', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="number" id="border-radius" name="border_radius" value="12" min="0" max="50" class="small-text"> px
+                                    <p class="description"><?php _e('Controla el redondeo de esquinas para todos los elementos (popups, botones, modales, etc.)', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row">
+                                    <label for="floating-button-bg"><?php _e('Color de Fondo del Botón', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="color" id="floating-button-bg" name="floating_button_bg" value="#007cba">
+                                    <p class="description"><?php _e('Color de fondo del botón flotante de audio', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row">
+                                    <label for="floating-button-icon"><?php _e('Color del Icono', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="color" id="floating-button-icon" name="floating_button_icon" value="#ffffff">
+                                    <p class="description"><?php _e('Color del icono dentro del botón flotante', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row">
+                                    <label for="floating-button-size"><?php _e('Tamaño del Botón Flotante', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <label><input type="radio" name="floating_button_size" value="small" /> <?php _e('Pequeño (40px)', 'nova-sound-fx'); ?></label><br>
+                                    <label><input type="radio" name="floating_button_size" value="medium" checked /> <?php _e('Mediano (56px)', 'nova-sound-fx'); ?></label><br>
+                                    <label><input type="radio" name="floating_button_size" value="large" /> <?php _e('Grande (72px)', 'nova-sound-fx'); ?></label>
+                                    <p class="description"><?php _e('Tamaño del botón flotante de control de audio', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
                         </table>
                         
                         <p class="submit">
@@ -647,7 +703,12 @@ class Nova_Sound_FX_Admin {
             'default_volume' => 50,
             'mobile_enabled' => false,
             'respect_prefers_reduced_motion' => true,
-            'preview_mode' => false
+            'preview_mode' => false,
+            'show_visual_effects' => true,
+            'border_radius' => 12,
+            'floating_button_bg' => '#007cba',
+            'floating_button_icon' => '#ffffff',
+            'floating_button_size' => 'medium'
         ));
         
         wp_send_json_success($settings);
@@ -668,7 +729,12 @@ class Nova_Sound_FX_Admin {
             'default_volume' => intval($_POST['default_volume']),
             'mobile_enabled' => isset($_POST['mobile_enabled']) ? true : false,
             'respect_prefers_reduced_motion' => isset($_POST['respect_prefers_reduced_motion']) ? true : false,
-            'preview_mode' => isset($_POST['preview_mode']) ? true : false
+            'preview_mode' => isset($_POST['preview_mode']) ? true : false,
+            'show_visual_effects' => isset($_POST['show_visual_effects']) ? true : false,
+            'border_radius' => intval($_POST['border_radius']),
+            'floating_button_bg' => sanitize_hex_color($_POST['floating_button_bg']),
+            'floating_button_icon' => sanitize_hex_color($_POST['floating_button_icon']),
+            'floating_button_size' => sanitize_text_field($_POST['floating_button_size'])
         );
         
         update_option('nova_sound_fx_settings', $settings);

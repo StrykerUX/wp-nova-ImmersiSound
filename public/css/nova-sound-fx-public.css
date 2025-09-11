@@ -11,6 +11,12 @@
     --nova-fx-bg: rgba(255, 255, 255, 0.95);
     --nova-fx-text: #1e1e1e;
     --nova-fx-border: rgba(0, 0, 0, 0.1);
+    
+    /* Variables de personalización dinámicas */
+    --nova-border-radius: 12px;
+    --nova-floating-button-bg: #007cba;
+    --nova-floating-button-icon: #ffffff;
+    --nova-floating-button-size: 56px;
 }
 
 /* Elementos con sonido activo - No agregamos estilos por defecto para evitar conflictos */
@@ -390,7 +396,7 @@ nav .nova-sound-fx-active {
 /* Popup principal */
 .nova-consent-popup {
     background: white;
-    border-radius: 16px;
+    border-radius: var(--nova-border-radius);
     max-width: 500px;
     width: 90%;
     padding: 40px;
@@ -440,7 +446,7 @@ nav .nova-sound-fx-active {
 /* Beneficios */
 .nova-consent-benefits {
     background: #f7f7f7;
-    border-radius: 12px;
+    border-radius: var(--nova-border-radius);
     padding: 20px;
     margin-bottom: 30px;
 }
@@ -478,7 +484,7 @@ nav .nova-sound-fx-active {
 .nova-consent-reject {
     flex: 1;
     padding: 14px 24px;
-    border-radius: 8px;
+    border-radius: var(--nova-border-radius);
     font-size: 16px;
     font-weight: 500;
     border: none;
@@ -556,12 +562,12 @@ nav .nova-sound-fx-active {
 }
 
 .nova-controller-toggle {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--nova-fx-primary) 0%, var(--nova-fx-primary-dark) 100%);
+    width: var(--nova-floating-button-size);
+    height: var(--nova-floating-button-size);
+    border-radius: var(--nova-border-radius);
+    background: var(--nova-floating-button-bg);
     border: none;
-    color: white;
+    color: var(--nova-floating-button-icon);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -623,7 +629,7 @@ nav .nova-sound-fx-active {
 /* Panel expandido */
 .nova-controller-expanded {
     background: white;
-    border-radius: 12px;
+    border-radius: var(--nova-border-radius);
     padding: 12px 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -706,7 +712,7 @@ nav .nova-sound-fx-active {
 .nova-controller-settings {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: var(--nova-border-radius);
     background: #f0f0f0;
     border: none;
     color: #666;
@@ -733,7 +739,7 @@ nav .nova-sound-fx-active {
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
     background: white;
-    border-radius: 12px;
+    border-radius: var(--nova-border-radius);
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     z-index: 999999;
@@ -776,7 +782,7 @@ nav .nova-sound-fx-active {
 
 .nova-settings-actions button {
     padding: 10px 20px;
-    border-radius: 6px;
+    border-radius: var(--nova-border-radius);
     border: none;
     cursor: pointer;
     font-size: 14px;
@@ -811,14 +817,16 @@ nav .nova-sound-fx-active {
     top: 20px;
     right: 20px;
     background: white;
-    border-radius: 8px;
-    padding: 16px 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: var(--nova-border-radius);
+    padding: 10px 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     z-index: 999999;
     opacity: 0;
     transform: translateY(-20px);
     transition: all 0.3s ease;
-    border-left: 4px solid var(--nova-fx-primary);
+    border-left: 3px solid var(--nova-fx-primary);
+    font-size: 14px;
+    max-width: 280px;
 }
 
 .nova-toast.nova-toast-show {
@@ -860,8 +868,8 @@ nav .nova-sound-fx-active {
     }
     
     .nova-controller-toggle {
-        width: 48px;
-        height: 48px;
+        width: calc(var(--nova-floating-button-size) * 0.85);
+        height: calc(var(--nova-floating-button-size) * 0.85);
     }
     
     .nova-controller-expanded {
@@ -874,6 +882,9 @@ nav .nova-sound-fx-active {
         right: 10px;
         left: 10px;
         width: auto;
+        padding: 8px 12px;
+        font-size: 13px;
+        top: 10px;
     }
 }
 
@@ -957,7 +968,7 @@ nav .nova-sound-fx-active {
     transform: translateX(-50%) translateY(-100px);
     background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     color: white;
-    border-radius: 16px;
+    border-radius: var(--nova-border-radius);
     padding: 16px 20px;
     box-shadow: 0 10px 40px rgba(79, 70, 229, 0.3);
     z-index: 999999;
@@ -980,7 +991,7 @@ nav .nova-sound-fx-active {
 
 .nova-pending-icon {
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    border-radius: var(--nova-border-radius);
     padding: 12px;
     display: flex;
     align-items: center;
@@ -1037,7 +1048,7 @@ nav .nova-sound-fx-active {
     background: rgba(255, 255, 255, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.3);
     color: white;
-    border-radius: 12px;
+    border-radius: var(--nova-border-radius);
     padding: 10px 16px;
     font-size: 14px;
     font-weight: 500;
@@ -1193,4 +1204,52 @@ body.nova-audio-pending [role="button"]:not([class*="nova-"])::after {
         animation: none !important;
         display: none;
     }
+}
+
+/* ===================================
+   TAMAÑOS DEL BOTÓN FLOTANTE
+   =================================== */
+
+/* Tamaño pequeño */
+.nova-floating-controller.nova-size-small .nova-controller-toggle {
+    --nova-floating-button-size: 40px;
+}
+
+/* Tamaño mediano (por defecto) */
+.nova-floating-controller.nova-size-medium .nova-controller-toggle {
+    --nova-floating-button-size: 56px;
+}
+
+/* Tamaño grande */
+.nova-floating-controller.nova-size-large .nova-controller-toggle {
+    --nova-floating-button-size: 72px;
+}
+
+/* ===================================
+   CONTROL DE EFECTOS VISUALES
+   =================================== */
+
+/* Ocultar todos los efectos visuales cuando están deshabilitados */
+body.nova-hide-visual-effects .nova-sound-wave,
+body.nova-hide-visual-effects .nova-sound-wave.active {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Deshabilitar animaciones de efectos visuales cuando están deshabilitados */
+body.nova-hide-visual-effects .nova-sound-fx-active.nova-visual-enabled.nova-sound-playing,
+body.nova-hide-visual-effects .nova-sound-fx-active.nova-visual-enabled.nova-sound-playing-hover,
+body.nova-hide-visual-effects .nova-sound-fx-active.nova-visual-enabled.nova-sound-playing-click,
+body.nova-hide-visual-effects .nova-sound-fx-active.nova-visual-enabled.nova-sound-playing-active {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Ocultar ondas del controlador flotante cuando efectos están deshabilitados */
+body.nova-hide-visual-effects .nova-controller-toggle .nova-sound-wave-1,
+body.nova-hide-visual-effects .nova-controller-toggle .nova-sound-wave-2 {
+    animation: none !important;
+    opacity: 0.3 !important;
 }

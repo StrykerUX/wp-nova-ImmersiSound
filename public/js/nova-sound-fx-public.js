@@ -34,8 +34,68 @@
             // Configurar detección de focus/blur para reactivación automática
             this.setupPageVisibilityDetection();
             
+            // Configurar efectos visuales según setting
+            this.setupVisualEffects();
+            
+            // Aplicar estilos personalizados
+            this.applyCustomStyles();
+            
             // Verificar consentimiento de audio
             this.checkAudioConsent();
+        }
+        
+        /**
+         * Configurar efectos visuales según setting
+         */
+        setupVisualEffects() {
+            const bodyElement = document.body;
+            
+            // Verificar si los efectos visuales están deshabilitados
+            if (this.settings.show_visual_effects === false) {
+                bodyElement.classList.add('nova-hide-visual-effects');
+                console.log('Nova Sound FX: Efectos visuales deshabilitados');
+            } else {
+                bodyElement.classList.remove('nova-hide-visual-effects');
+                console.log('Nova Sound FX: Efectos visuales habilitados');
+            }
+        }
+        
+        /**
+         * Aplicar estilos personalizados desde la configuración
+         */
+        applyCustomStyles() {
+            const root = document.documentElement;
+            
+            // Aplicar border radius personalizado
+            if (this.settings.border_radius !== undefined) {
+                root.style.setProperty('--nova-border-radius', `${this.settings.border_radius}px`);
+                console.log(`Nova Sound FX: Border radius aplicado: ${this.settings.border_radius}px`);
+            }
+            
+            // Aplicar color de fondo del botón flotante
+            if (this.settings.floating_button_bg) {
+                root.style.setProperty('--nova-floating-button-bg', this.settings.floating_button_bg);
+                console.log(`Nova Sound FX: Color de fondo del botón aplicado: ${this.settings.floating_button_bg}`);
+            }
+            
+            // Aplicar color del icono
+            if (this.settings.floating_button_icon) {
+                root.style.setProperty('--nova-floating-button-icon', this.settings.floating_button_icon);
+                console.log(`Nova Sound FX: Color del icono aplicado: ${this.settings.floating_button_icon}`);
+            }
+            
+            // Aplicar tamaño del botón
+            if (this.settings.floating_button_size) {
+                const sizeMap = {
+                    'small': '40px',
+                    'medium': '56px',
+                    'large': '72px'
+                };
+                
+                const buttonSize = sizeMap[this.settings.floating_button_size] || '56px';
+                root.style.setProperty('--nova-floating-button-size', buttonSize);
+                console.log(`Nova Sound FX: Tamaño del botón aplicado: ${this.settings.floating_button_size} (${buttonSize})`);
+            }
         }
         
         /**
@@ -868,7 +928,8 @@
             }
             
             const controller = document.createElement('div');
-            controller.className = 'nova-floating-controller';
+            const sizeClass = this.settings.floating_button_size ? `nova-size-${this.settings.floating_button_size}` : 'nova-size-medium';
+            controller.className = `nova-floating-controller ${sizeClass}`;
             const i18n = novaSoundFX.i18n || {};
             controller.innerHTML = `
                 <div class="nova-controller-main">
@@ -880,8 +941,8 @@
                         </svg>
                         <svg class="nova-icon-volume-off" style="display: none;" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                            <line x1="23" y1="9" x2="17" y2="15"></line>
-                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                            <line x1="22" y1="9" x2="16" y2="15"></line>
+                            <line x1="16" y1="9" x2="22" y2="15"></line>
                         </svg>
                     </button>
                 </div>
@@ -1451,7 +1512,8 @@
                 source.start(0);
                 
                 // Mostrar indicador visual solo si está habilitado globalmente y en el mapeo
-                if (this.settings.show_visual_feedback !== false && 
+                if (this.settings.show_visual_effects !== false && 
+                    this.settings.show_visual_feedback !== false && 
                     options.mapping && options.mapping.show_visual_effect) {
                     this.showSoundWave(options.element);
                 }
