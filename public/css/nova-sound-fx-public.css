@@ -17,6 +17,15 @@
     --nova-floating-button-bg: #007cba;
     --nova-floating-button-icon: #ffffff;
     --nova-floating-button-size: 56px;
+    
+    /* Variables para notificación pendiente */
+    --nova-pending-gradient-1: #4f46e5;
+    --nova-pending-gradient-2: #7c3aed;
+    --nova-pending-text-color: #ffffff;
+    --nova-pending-border-color: rgba(255, 255, 255, 0.3);
+    --nova-pending-button-bg: rgba(255, 255, 255, 0.2);
+    --nova-pending-button-text: #ffffff;
+    --nova-pending-button-border: rgba(255, 255, 255, 0.3);
 }
 
 /* Elementos con sonido activo - No agregamos estilos por defecto para evitar conflictos */
@@ -963,11 +972,10 @@ nav .nova-sound-fx-active {
 
 .nova-audio-pending-notification {
     position: fixed;
-    top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100px);
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--nova-pending-gradient-1) 0%, var(--nova-pending-gradient-2) 100%);
+    color: var(--nova-pending-text-color);
     border-radius: var(--nova-border-radius);
     padding: 16px 20px;
     box-shadow: 0 10px 40px rgba(79, 70, 229, 0.3);
@@ -976,10 +984,31 @@ nav .nova-sound-fx-active {
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     max-width: 500px;
     width: 90%;
+    backdrop-filter: blur(10px);
+}
+
+/* Posición arriba */
+.nova-audio-pending-notification.nova-pending-top {
+    top: 20px;
+}
+
+/* Posición abajo */
+.nova-audio-pending-notification.nova-pending-bottom {
+    bottom: 20px;
+    transform: translateX(-50%) translateY(100px);
+}
+
+/* Sin backdrop filter */
+.nova-audio-pending-notification.nova-no-backdrop-filter {
+    backdrop-filter: none;
 }
 
 .nova-audio-pending-notification.nova-pending-show {
     opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.nova-audio-pending-notification.nova-pending-bottom.nova-pending-show {
     transform: translateX(-50%) translateY(0);
 }
 
@@ -990,13 +1019,14 @@ nav .nova-sound-fx-active {
 }
 
 .nova-pending-icon {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--nova-pending-button-bg);
     border-radius: var(--nova-border-radius);
     padding: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     animation: novaPendingPulse 2s ease-in-out infinite;
+    border: 1px solid var(--nova-pending-border-color);
 }
 
 @keyframes novaPendingPulse {
@@ -1045,9 +1075,9 @@ nav .nova-sound-fx-active {
 }
 
 .nova-pending-activate {
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    background: var(--nova-pending-button-bg);
+    border: 2px solid var(--nova-pending-button-border);
+    color: var(--nova-pending-button-text);
     border-radius: var(--nova-border-radius);
     padding: 10px 16px;
     font-size: 14px;

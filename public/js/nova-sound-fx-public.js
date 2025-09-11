@@ -686,9 +686,24 @@
          * Mostrar notificación de audio pendiente
          */
         showAudioPendingNotification() {
+            // Verificar si la notificación está habilitada
+            if (this.settings.pending_notification_enabled === false) {
+                return;
+            }
+            
+            // Aplicar estilos personalizados
+            this.applyPendingNotificationStyles();
+            
             // Crear notificación persistente
             const notification = document.createElement('div');
-            notification.className = 'nova-audio-pending-notification';
+            const position = this.settings.pending_notification_position || 'top';
+            notification.className = `nova-audio-pending-notification nova-pending-${position}`;
+            
+            // Aplicar backdrop filter si está habilitado
+            if (!this.settings.pending_notification_backdrop_filter) {
+                notification.classList.add('nova-no-backdrop-filter');
+            }
+            
             notification.innerHTML = `
                 <div class="nova-pending-content">
                     <div class="nova-pending-icon">
@@ -727,6 +742,42 @@
             
             // Agregar clase al body para otros elementos puedan reaccionar
             document.body.classList.add('nova-audio-pending');
+        }
+        
+        /**
+         * Aplicar estilos personalizados a la notificación pendiente
+         */
+        applyPendingNotificationStyles() {
+            const root = document.documentElement;
+            
+            // Aplicar gradiente
+            if (this.settings.pending_notification_gradient_1 && this.settings.pending_notification_gradient_2) {
+                root.style.setProperty('--nova-pending-gradient-1', this.settings.pending_notification_gradient_1);
+                root.style.setProperty('--nova-pending-gradient-2', this.settings.pending_notification_gradient_2);
+            }
+            
+            // Aplicar color de texto
+            if (this.settings.pending_notification_text_color) {
+                root.style.setProperty('--nova-pending-text-color', this.settings.pending_notification_text_color);
+            }
+            
+            // Aplicar color de borde
+            if (this.settings.pending_notification_border_color) {
+                root.style.setProperty('--nova-pending-border-color', this.settings.pending_notification_border_color);
+            }
+            
+            // Aplicar estilos del botón
+            if (this.settings.pending_notification_button_bg) {
+                root.style.setProperty('--nova-pending-button-bg', this.settings.pending_notification_button_bg);
+            }
+            
+            if (this.settings.pending_notification_button_text) {
+                root.style.setProperty('--nova-pending-button-text', this.settings.pending_notification_button_text);
+            }
+            
+            if (this.settings.pending_notification_button_border) {
+                root.style.setProperty('--nova-pending-button-border', this.settings.pending_notification_button_border);
+            }
         }
         
         /**

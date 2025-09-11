@@ -47,6 +47,9 @@ class Nova_Sound_FX_Admin {
                 <a href="#settings" class="nav-tab" data-tab="settings">
                     <?php _e('Configuración', 'nova-sound-fx'); ?>
                 </a>
+                <a href="#personalization" class="nav-tab" data-tab="personalization">
+                    <?php _e('Personalización', 'nova-sound-fx'); ?>
+                </a>
             </div>
             
             <div class="tab-content">
@@ -226,12 +229,23 @@ class Nova_Sound_FX_Admin {
                                     <p class="description"><?php _e('Mostrar ondas visuales cuando se reproducen sonidos. Útil para debugging pero puede ser molesto para usuarios finales.', 'nova-sound-fx'); ?></p>
                                 </td>
                             </tr>
-                            
-                            <!-- Sección de Personalización de Diseño -->
-                            <tr>
-                                <th colspan="2"><h3><?php _e('Personalización del Diseño', 'nova-sound-fx'); ?></h3></th>
-                            </tr>
-                            
+                        </table>
+                        
+                        <p class="submit">
+                            <button type="submit" class="button button-primary"><?php _e('Guardar Configuración', 'nova-sound-fx'); ?></button>
+                        </p>
+                    </form>
+                </div>
+                
+                <!-- Personalization Tab -->
+                <div id="personalization" class="tab-pane">
+                    <h2><?php _e('Personalización', 'nova-sound-fx'); ?></h2>
+                    <p><?php _e('Personaliza la apariencia y diseño de todos los elementos del plugin', 'nova-sound-fx'); ?></p>
+                    
+                    <form id="personalization-form">
+                        <!-- Sección de Diseño General -->
+                        <h3><?php _e('Diseño General', 'nova-sound-fx'); ?></h3>
+                        <table class="form-table">
                             <tr>
                                 <th scope="row">
                                     <label for="border-radius"><?php _e('Border Radius Global', 'nova-sound-fx'); ?></label>
@@ -241,17 +255,20 @@ class Nova_Sound_FX_Admin {
                                     <p class="description"><?php _e('Controla el redondeo de esquinas para todos los elementos (popups, botones, modales, etc.)', 'nova-sound-fx'); ?></p>
                                 </td>
                             </tr>
-                            
+                        </table>
+                        
+                        <!-- Sección del Botón Flotante -->
+                        <h3><?php _e('Botón Flotante', 'nova-sound-fx'); ?></h3>
+                        <table class="form-table">
                             <tr>
                                 <th scope="row">
-                                    <label for="floating-button-bg"><?php _e('Color de Fondo del Botón', 'nova-sound-fx'); ?></label>
+                                    <label for="floating-button-bg"><?php _e('Color de Fondo', 'nova-sound-fx'); ?></label>
                                 </th>
                                 <td>
                                     <input type="color" id="floating-button-bg" name="floating_button_bg" value="#007cba">
                                     <p class="description"><?php _e('Color de fondo del botón flotante de audio', 'nova-sound-fx'); ?></p>
                                 </td>
                             </tr>
-                            
                             <tr>
                                 <th scope="row">
                                     <label for="floating-button-icon"><?php _e('Color del Icono', 'nova-sound-fx'); ?></label>
@@ -261,10 +278,9 @@ class Nova_Sound_FX_Admin {
                                     <p class="description"><?php _e('Color del icono dentro del botón flotante', 'nova-sound-fx'); ?></p>
                                 </td>
                             </tr>
-                            
                             <tr>
                                 <th scope="row">
-                                    <label for="floating-button-size"><?php _e('Tamaño del Botón Flotante', 'nova-sound-fx'); ?></label>
+                                    <label for="floating-button-size"><?php _e('Tamaño', 'nova-sound-fx'); ?></label>
                                 </th>
                                 <td>
                                     <label><input type="radio" name="floating_button_size" value="small" /> <?php _e('Pequeño (40px)', 'nova-sound-fx'); ?></label><br>
@@ -275,8 +291,93 @@ class Nova_Sound_FX_Admin {
                             </tr>
                         </table>
                         
+                        <!-- Sección de Notificación de Audio Pendiente -->
+                        <h3><?php _e('Notificación de Audio Pendiente', 'nova-sound-fx'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row">
+                                    <label for="pending-notification-enabled"><?php _e('Mostrar Notificación', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="checkbox" id="pending-notification-enabled" name="pending_notification_enabled" value="1" checked>
+                                    <p class="description"><?php _e('Mostrar notificación cuando el audio necesita reactivación después de recargar la página', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="pending-notification-position"><?php _e('Posición', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <select id="pending-notification-position" name="pending_notification_position">
+                                        <option value="top"><?php _e('Arriba', 'nova-sound-fx'); ?></option>
+                                        <option value="bottom"><?php _e('Abajo', 'nova-sound-fx'); ?></option>
+                                    </select>
+                                    <p class="description"><?php _e('Posición de la notificación en la pantalla', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label><?php _e('Colores del Gradiente', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="color" id="pending-gradient-1" name="pending_notification_gradient_1" value="#4f46e5">
+                                    <input type="color" id="pending-gradient-2" name="pending_notification_gradient_2" value="#7c3aed">
+                                    <p class="description"><?php _e('Colores del fondo con gradiente de la notificación', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="pending-text-color"><?php _e('Color del Texto', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="color" id="pending-text-color" name="pending_notification_text_color" value="#ffffff">
+                                    <p class="description"><?php _e('Color del texto de la notificación', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="pending-border-color"><?php _e('Color del Borde', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="text" id="pending-border-color" name="pending_notification_border_color" value="rgba(255,255,255,0.3)" class="regular-text">
+                                    <p class="description"><?php _e('Color del borde de la notificación (soporta rgba)', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label><?php _e('Botón "Activar Ahora"', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <div>
+                                            <label><?php _e('Fondo:', 'nova-sound-fx'); ?></label><br>
+                                            <input type="text" id="pending-button-bg" name="pending_notification_button_bg" value="rgba(255,255,255,0.2)" class="small-text">
+                                        </div>
+                                        <div>
+                                            <label><?php _e('Texto:', 'nova-sound-fx'); ?></label><br>
+                                            <input type="color" id="pending-button-text" name="pending_notification_button_text" value="#ffffff">
+                                        </div>
+                                        <div>
+                                            <label><?php _e('Borde:', 'nova-sound-fx'); ?></label><br>
+                                            <input type="text" id="pending-button-border" name="pending_notification_button_border" value="rgba(255,255,255,0.3)" class="small-text">
+                                        </div>
+                                    </div>
+                                    <p class="description"><?php _e('Colores del botón de activación', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="pending-backdrop-filter"><?php _e('Efecto Blur (Backdrop Filter)', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="checkbox" id="pending-backdrop-filter" name="pending_notification_backdrop_filter" value="1" checked>
+                                    <p class="description"><?php _e('Aplicar efecto de desenfoque al fondo de la notificación', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                        </table>
+                        
                         <p class="submit">
-                            <button type="submit" class="button button-primary"><?php _e('Guardar Configuración', 'nova-sound-fx'); ?></button>
+                            <button type="submit" class="button button-primary"><?php _e('Guardar Personalización', 'nova-sound-fx'); ?></button>
                         </p>
                     </form>
                 </div>
@@ -708,7 +809,17 @@ class Nova_Sound_FX_Admin {
             'border_radius' => 12,
             'floating_button_bg' => '#007cba',
             'floating_button_icon' => '#ffffff',
-            'floating_button_size' => 'medium'
+            'floating_button_size' => 'medium',
+            'pending_notification_enabled' => true,
+            'pending_notification_position' => 'top',
+            'pending_notification_gradient_1' => '#4f46e5',
+            'pending_notification_gradient_2' => '#7c3aed',
+            'pending_notification_text_color' => '#ffffff',
+            'pending_notification_border_color' => 'rgba(255,255,255,0.3)',
+            'pending_notification_button_bg' => 'rgba(255,255,255,0.2)',
+            'pending_notification_button_text' => '#ffffff',
+            'pending_notification_button_border' => 'rgba(255,255,255,0.3)',
+            'pending_notification_backdrop_filter' => true
         ));
         
         wp_send_json_success($settings);
@@ -731,10 +842,20 @@ class Nova_Sound_FX_Admin {
             'respect_prefers_reduced_motion' => isset($_POST['respect_prefers_reduced_motion']) ? true : false,
             'preview_mode' => isset($_POST['preview_mode']) ? true : false,
             'show_visual_effects' => isset($_POST['show_visual_effects']) ? true : false,
-            'border_radius' => intval($_POST['border_radius']),
-            'floating_button_bg' => sanitize_hex_color($_POST['floating_button_bg']),
-            'floating_button_icon' => sanitize_hex_color($_POST['floating_button_icon']),
-            'floating_button_size' => sanitize_text_field($_POST['floating_button_size'])
+            'border_radius' => isset($_POST['border_radius']) ? intval($_POST['border_radius']) : 12,
+            'floating_button_bg' => isset($_POST['floating_button_bg']) ? sanitize_hex_color($_POST['floating_button_bg']) : '#007cba',
+            'floating_button_icon' => isset($_POST['floating_button_icon']) ? sanitize_hex_color($_POST['floating_button_icon']) : '#ffffff',
+            'floating_button_size' => isset($_POST['floating_button_size']) ? sanitize_text_field($_POST['floating_button_size']) : 'medium',
+            'pending_notification_enabled' => isset($_POST['pending_notification_enabled']) ? true : false,
+            'pending_notification_position' => isset($_POST['pending_notification_position']) ? sanitize_text_field($_POST['pending_notification_position']) : 'top',
+            'pending_notification_gradient_1' => isset($_POST['pending_notification_gradient_1']) ? sanitize_hex_color($_POST['pending_notification_gradient_1']) : '#4f46e5',
+            'pending_notification_gradient_2' => isset($_POST['pending_notification_gradient_2']) ? sanitize_hex_color($_POST['pending_notification_gradient_2']) : '#7c3aed',
+            'pending_notification_text_color' => isset($_POST['pending_notification_text_color']) ? sanitize_hex_color($_POST['pending_notification_text_color']) : '#ffffff',
+            'pending_notification_border_color' => isset($_POST['pending_notification_border_color']) ? sanitize_text_field($_POST['pending_notification_border_color']) : 'rgba(255,255,255,0.3)',
+            'pending_notification_button_bg' => isset($_POST['pending_notification_button_bg']) ? sanitize_text_field($_POST['pending_notification_button_bg']) : 'rgba(255,255,255,0.2)',
+            'pending_notification_button_text' => isset($_POST['pending_notification_button_text']) ? sanitize_hex_color($_POST['pending_notification_button_text']) : '#ffffff',
+            'pending_notification_button_border' => isset($_POST['pending_notification_button_border']) ? sanitize_text_field($_POST['pending_notification_button_border']) : 'rgba(255,255,255,0.3)',
+            'pending_notification_backdrop_filter' => isset($_POST['pending_notification_backdrop_filter']) ? true : false
         );
         
         update_option('nova_sound_fx_settings', $settings);
