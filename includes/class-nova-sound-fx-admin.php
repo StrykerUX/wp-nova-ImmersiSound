@@ -34,6 +34,31 @@ class Nova_Sound_FX_Admin {
         <div class="wrap nova-sound-fx-admin">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
             
+            <!-- Buy Me a Coffee Support Banner -->
+            <div class="nova-support-banner">
+                <div class="nova-support-content">
+                    <div class="nova-support-icon">
+                        <span class="rocket-icon">🚀</span>
+                    </div>
+                    <div class="nova-support-text">
+                        <h3><?php _e('Sponsor Future Improvements', 'nova-sound-fx'); ?></h3>
+                        <p><?php _e('Help keep Nova Sound FX free and continuously updated with new features!', 'nova-sound-fx'); ?></p>
+                    </div>
+                    <div class="nova-support-action">
+                        <a href="https://buymeacoffee.com/imstryker" target="_blank" class="nova-support-button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                                <line x1="6" y1="1" x2="6" y2="4"></line>
+                                <line x1="10" y1="1" x2="10" y2="4"></line>
+                                <line x1="14" y1="1" x2="14" y2="4"></line>
+                            </svg>
+                            <?php _e('Buy Me a Coffee', 'nova-sound-fx'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
             <div class="nav-tab-wrapper">
                 <a href="#sound-library" class="nav-tab nav-tab-active" data-tab="sound-library">
                     <?php _e('Biblioteca de Sonidos', 'nova-sound-fx'); ?>
@@ -227,6 +252,46 @@ class Nova_Sound_FX_Admin {
                                 <td>
                                     <input type="checkbox" id="show-visual-effects" name="show_visual_effects" value="1" checked>
                                     <p class="description"><?php _e('Mostrar ondas visuales cuando se reproducen sonidos. Útil para debugging pero puede ser molesto para usuarios finales.', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <!-- Buy Me a Coffee Widget Settings -->
+                        <h3><?php _e('Widget de Soporte', 'nova-sound-fx'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row">
+                                    <label for="bmc-widget-enabled"><?php _e('Mostrar Widget de Buy Me a Coffee', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <input type="checkbox" id="bmc-widget-enabled" name="bmc_widget_enabled" value="1">
+                                    <p class="description"><?php _e('Muestra un botón flotante de Buy Me a Coffee en el sitio web', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="bmc-widget-position"><?php _e('Posición del Widget', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <select id="bmc-widget-position" name="bmc_widget_position">
+                                        <option value="Right"><?php _e('Derecha', 'nova-sound-fx'); ?></option>
+                                        <option value="Left"><?php _e('Izquierda', 'nova-sound-fx'); ?></option>
+                                    </select>
+                                    <p class="description"><?php _e('Posición del widget en la pantalla', 'nova-sound-fx'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="bmc-widget-pages"><?php _e('Mostrar en', 'nova-sound-fx'); ?></label>
+                                </th>
+                                <td>
+                                    <select id="bmc-widget-pages" name="bmc_widget_pages">
+                                        <option value="all"><?php _e('Todas las páginas', 'nova-sound-fx'); ?></option>
+                                        <option value="home"><?php _e('Solo página de inicio', 'nova-sound-fx'); ?></option>
+                                        <option value="posts"><?php _e('Solo entradas', 'nova-sound-fx'); ?></option>
+                                        <option value="pages"><?php _e('Solo páginas', 'nova-sound-fx'); ?></option>
+                                    </select>
+                                    <p class="description"><?php _e('Dónde mostrar el widget de Buy Me a Coffee', 'nova-sound-fx'); ?></p>
                                 </td>
                             </tr>
                         </table>
@@ -819,7 +884,10 @@ class Nova_Sound_FX_Admin {
             'pending_notification_button_bg' => 'rgba(255,255,255,0.2)',
             'pending_notification_button_text' => '#ffffff',
             'pending_notification_button_border' => 'rgba(255,255,255,0.3)',
-            'pending_notification_backdrop_filter' => true
+            'pending_notification_backdrop_filter' => true,
+            'bmc_widget_enabled' => false,
+            'bmc_widget_position' => 'Right',
+            'bmc_widget_pages' => 'all'
         ));
         
         wp_send_json_success($settings);
@@ -855,7 +923,10 @@ class Nova_Sound_FX_Admin {
             'pending_notification_button_bg' => isset($_POST['pending_notification_button_bg']) ? sanitize_text_field($_POST['pending_notification_button_bg']) : 'rgba(255,255,255,0.2)',
             'pending_notification_button_text' => isset($_POST['pending_notification_button_text']) ? sanitize_hex_color($_POST['pending_notification_button_text']) : '#ffffff',
             'pending_notification_button_border' => isset($_POST['pending_notification_button_border']) ? sanitize_text_field($_POST['pending_notification_button_border']) : 'rgba(255,255,255,0.3)',
-            'pending_notification_backdrop_filter' => isset($_POST['pending_notification_backdrop_filter']) ? true : false
+            'pending_notification_backdrop_filter' => isset($_POST['pending_notification_backdrop_filter']) ? true : false,
+            'bmc_widget_enabled' => isset($_POST['bmc_widget_enabled']) ? true : false,
+            'bmc_widget_position' => isset($_POST['bmc_widget_position']) ? sanitize_text_field($_POST['bmc_widget_position']) : 'Right',
+            'bmc_widget_pages' => isset($_POST['bmc_widget_pages']) ? sanitize_text_field($_POST['bmc_widget_pages']) : 'all'
         );
         
         update_option('nova_sound_fx_settings', $settings);

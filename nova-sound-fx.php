@@ -49,6 +49,18 @@ function nova_sound_fx_deactivate() {
     flush_rewrite_rules();
 }
 
+// Add plugin action links
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'nova_sound_fx_action_links');
+function nova_sound_fx_action_links($links) {
+    $settings_link = '<a href="' . admin_url('admin.php?page=nova-sound-fx') . '">' . __('Settings', 'nova-sound-fx') . '</a>';
+    $support_link = '<a href="https://buymeacoffee.com/imstryker" target="_blank" style="color: #5F7FFF; font-weight: bold;">🚀 ' . __('Support', 'nova-sound-fx') . '</a>';
+    
+    array_unshift($links, $support_link);
+    array_unshift($links, $settings_link);
+    
+    return $links;
+}
+
 // Create database tables
 function nova_sound_fx_create_tables() {
     global $wpdb;

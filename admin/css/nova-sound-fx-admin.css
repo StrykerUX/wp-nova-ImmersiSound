@@ -16,6 +16,8 @@
     --nova-border: #e0e0e0;
     --nova-text: #1e1e1e;
     --nova-text-secondary: #757575;
+    --nova-support-primary: #5F7FFF;
+    --nova-support-secondary: #4B3FCC;
 }
 
 /* Estilos generales */
@@ -611,4 +613,134 @@ input[type="range"]::-moz-range-thumb:hover {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+
+/* ===================================
+   SUPPORT BANNER STYLES
+   =================================== */
+
+.nova-support-banner {
+    background: linear-gradient(135deg, var(--nova-support-primary) 0%, var(--nova-support-secondary) 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 20px rgba(95, 127, 255, 0.2);
+    animation: novaSupportGlow 3s ease-in-out infinite;
+}
+
+@keyframes novaSupportGlow {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(95, 127, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 6px 30px rgba(95, 127, 255, 0.3);
+    }
+}
+
+.nova-support-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nova-support-icon {
+    font-size: 48px;
+    animation: novaRocketFloat 4s ease-in-out infinite;
+}
+
+@keyframes novaRocketFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-5px) rotate(5deg);
+    }
+    75% {
+        transform: translateY(5px) rotate(-5deg);
+    }
+}
+
+.nova-support-text {
+    flex: 1;
+    color: white;
+    min-width: 250px;
+}
+
+.nova-support-text h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.nova-support-text p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.95;
+    line-height: 1.5;
+}
+
+.nova-support-action {
+    display: flex;
+    align-items: center;
+}
+
+.nova-support-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.nova-support-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    color: white;
+    text-decoration: none;
+}
+
+.nova-support-button:active {
+    transform: translateY(0);
+}
+
+.nova-support-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 768px) {
+    .nova-support-banner {
+        padding: 15px;
+    }
+    
+    .nova-support-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nova-support-text {
+        min-width: 100%;
+    }
+    
+    .nova-support-action {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .nova-support-button {
+        width: 100%;
+        justify-content: center;
+    }
 }

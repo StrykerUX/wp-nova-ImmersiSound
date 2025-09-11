@@ -51,6 +51,9 @@ class Nova_Sound_FX {
         // Add sound data to frontend
         add_action('wp_footer', array($this->public, 'output_sound_data'));
         
+        // Add Buy Me a Coffee widget
+        add_action('wp_footer', array($this->public, 'output_bmc_widget'));
+        
         // AJAX for public use
         add_action('wp_ajax_nova_sound_fx_get_sounds', array($this->public, 'ajax_get_sounds'));
         add_action('wp_ajax_nopriv_nova_sound_fx_get_sounds', array($this->public, 'ajax_get_sounds'));

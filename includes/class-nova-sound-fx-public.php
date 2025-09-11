@@ -240,4 +240,55 @@ class Nova_Sound_FX_Public {
         $sounds = $this->get_all_sounds_data();
         wp_send_json_success($sounds);
     }
+    
+    /**
+     * Output Buy Me a Coffee widget
+     */
+    public function output_bmc_widget() {
+        $settings = get_option('nova_sound_fx_settings', array());
+        
+        // Check if BMC widget is enabled
+        if (empty($settings['bmc_widget_enabled'])) {
+            return;
+        }
+        
+        // Check pages setting
+        $widget_pages = isset($settings['bmc_widget_pages']) ? $settings['bmc_widget_pages'] : 'all';
+        
+        // Determine if we should show the widget on this page
+        $show_widget = false;
+        switch ($widget_pages) {
+            case 'all':
+                $show_widget = true;
+                break;
+            case 'home':
+                $show_widget = is_front_page() || is_home();
+                break;
+            case 'posts':
+                $show_widget = is_single();
+                break;
+            case 'pages':
+                $show_widget = is_page();
+                break;
+        }
+        
+        if (!$show_widget) {
+            return;
+        }
+        
+        $position = isset($settings['bmc_widget_position']) ? $settings['bmc_widget_position'] : 'Right';
+        
+        ?>
+        <script data-name="BMC-Widget" 
+                data-cfasync="false" 
+                src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+                data-id="imstryker" 
+                data-description="Support me on Buy me a coffee!" 
+                data-message="🚀 Sponsor future improvements" 
+                data-color="#5F7FFF" 
+                data-position="<?php echo esc_attr($position); ?>" 
+                data-x_margin="18" 
+                data-y_margin="18"></script>
+        <?php
+    }
 }
