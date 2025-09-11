@@ -47,15 +47,12 @@ class Nova_Sound_FX_Setup {
             return;
         }
         
-        // Check if we should redirect
+        // Check if we should redirect - ALWAYS redirect on activation
         if (get_transient('nova_sound_fx_activation_redirect')) {
             delete_transient('nova_sound_fx_activation_redirect');
-            
-            $settings = get_option('nova_sound_fx_settings', array());
-            if (empty($settings['setup_complete'])) {
-                wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx-setup'));
-                exit;
-            }
+            // Always redirect to setup wizard
+            wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx-setup'));
+            exit;
         }
     }
     
@@ -74,7 +71,7 @@ class Nova_Sound_FX_Setup {
         $settings = get_option('nova_sound_fx_settings', array());
         
         if (isset($_POST['accept_recommended'])) {
-            // User clicked "ACTIVATE ALL - RECOMMENDED"
+            // User clicked "ACTIVATE PLUGIN" - save settings and go to thank you screen
             $settings['enable_sounds'] = true;
             $settings['save_user_preferences'] = true;
             $settings['show_support_widget'] = true;
@@ -93,28 +90,18 @@ class Nova_Sound_FX_Setup {
             update_option('nova_sound_fx_settings', $settings);
             update_option('nova_sound_fx_setup_complete', true);
             
-            // Redirect to main settings with success message
+            // Redirect to thank you screen (step 2)
+            wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx-setup&step=thank-you'));
+            exit;
+            
+        } elseif (isset($_POST['continue_to_plugin'])) {
+            // User clicked continue from thank you page
             wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx&setup=complete&welcome=1'));
             exit;
             
-        } elseif (isset($_POST['configure_manual'])) {
-            // User wants manual configuration
-            $settings['enable_sounds'] = false;
-            $settings['save_user_preferences'] = false;
-            $settings['show_support_widget'] = false;
-            $settings['show_admin_banner'] = false;
-            $settings['show_support_links'] = false;
-            $settings['terms_accepted'] = true; // Still accept basic terms
-            $settings['setup_complete'] = true;
-            $settings['setup_date'] = current_time('mysql');
-            $settings['supporter_status'] = 'inactive';
-            
-            update_option('nova_sound_fx_settings', $settings);
-            update_option('nova_sound_fx_setup_complete', true);
-            
-            // Redirect to settings for manual config
-            wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx&setup=manual'));
-            exit;
+        } elseif (isset($_POST['support_plugin'])) {
+            // User clicked support button - open in new tab via JavaScript
+            // This is handled via JavaScript to open in new tab
         }
     }
     
@@ -210,38 +197,31 @@ class Nova_Sound_FX_Setup {
         }
         .nova-setup-buttons {
             display: flex;
-            gap: 15px;
+            justify-content: center;
             margin-top: 30px;
         }
         .nova-btn-primary {
             background: linear-gradient(135deg, #11ba82 0%, #0ea968 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 16px;
+            padding: 18px 50px;
+            font-size: 18px;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
-            flex: 2;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
         }
         .nova-btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(17, 186, 130, 0.3);
+            box-shadow: 0 8px 25px rgba(17, 186, 130, 0.4);
         }
-        .nova-btn-secondary {
-            background: transparent;
-            color: #999;
-            border: 1px solid #ddd;
-            padding: 12px 20px;
-            font-size: 13px;
-            border-radius: 8px;
-            cursor: pointer;
-            flex: 1;
-            transition: background 0.2s;
-        }
-        .nova-btn-secondary:hover {
-            background: #f5f5f5;
+        .nova-btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         .nova-small-text {
             font-size: 11px;
@@ -266,6 +246,19 @@ class Nova_Sound_FX_Setup {
      * Render setup wizard page
      */
     public function render_setup_page() {
+        $step = isset($_GET['step']) ? sanitize_text_field($_GET['step']) : 'terms';
+        
+        if ($step === 'thank-you') {
+            $this->render_thank_you_screen();
+        } else {
+            $this->render_terms_screen();
+        }
+    }
+    
+    /**
+     * Render terms acceptance screen (Step 1)
+     */
+    private function render_terms_screen() {
         ?>
         <div class="nova-setup-wrapper">
             <div class="nova-setup-header">
@@ -300,11 +293,8 @@ class Nova_Sound_FX_Setup {
                     
                     <div class="nova-setup-buttons">
                         <button type="submit" name="accept_recommended" class="nova-btn-primary" id="accept_btn">
-                            ACTIVAR TODO
-                            <span class="nova-recommended-badge">RECOMENDADO</span>
-                        </button>
-                        <button type="submit" name="configure_manual" class="nova-btn-secondary">
-                            Configurar manualmente
+                            ACTIVAR PLUGIN
+                            <span class="nova-recommended-badge">✓ ACEPTAR Y CONTINUAR</span>
                         </button>
                     </div>
                     
@@ -367,6 +357,63 @@ class Nova_Sound_FX_Setup {
             }
         });
         </script>
+        <?php
+    }
+    
+    /**
+     * Render thank you screen (Step 2)
+     */
+    private function render_thank_you_screen() {
+        ?>
+        <div class="nova-setup-wrapper">
+            <div class="nova-setup-header" style="background: linear-gradient(135deg, #11ba82 0%, #0ea968 100%);">
+                <h1 style="color: white;">✨ ¡Plugin Activado con Éxito! ✨</h1>
+                <p style="color: rgba(255,255,255,0.95);">Nova ImmersiSound está listo para usar</p>
+            </div>
+            
+            <div class="nova-setup-content" style="text-align: center;">
+                <div style="margin: 30px 0;">
+                    <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
+                    <h2 style="color: #333; margin-bottom: 15px;">¡Gracias por usar Nova ImmersiSound!</h2>
+                    <p style="font-size: 18px; color: #666; line-height: 1.6; max-width: 500px; margin: 0 auto;">
+                        Tu sitio web ahora tiene superpoderes de audio. 
+                        Disfruta creando experiencias inmersivas para tus visitantes.
+                    </p>
+                </div>
+                
+                <!-- Support Reminder Section -->
+                <div style="background: #f7f9fc; border-radius: 12px; padding: 30px; margin: 30px 0;">
+                    <h3 style="color: #666; margin-top: 0;">☕ Este Plugin es 100% Gratuito</h3>
+                    <p style="color: #666; line-height: 1.6; margin: 15px 0;">
+                        Nova ImmersiSound es y siempre será gratuito. Si te resulta útil y 
+                        ahorras tiempo con él, considera apoyar su desarrollo continuo.
+                    </p>
+                    <p style="color: #999; font-size: 14px; margin: 15px 0;">
+                        Tu apoyo me permite seguir mejorando el plugin y crear más herramientas gratuitas para la comunidad.
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="https://buymeacoffee.com/imstryker" 
+                           target="_blank" 
+                           class="button" 
+                           style="background: #FFDD00; color: #333; border: none; padding: 12px 25px; font-weight: bold; margin-right: 10px;"
+                           onclick="window.open(this.href, '_blank'); return false;">
+                            ☕ Invitarme un Café
+                        </a>
+                        <button type="button" 
+                                onclick="window.location.href='<?php echo admin_url('admin.php?page=nova-sound-fx&welcome=1'); ?>'"
+                                class="button button-primary" 
+                                style="padding: 12px 25px;">
+                            Continuar al Plugin →
+                        </button>
+                    </div>
+                </div>
+                
+                <p style="color: #999; font-size: 13px; margin-top: 20px;">
+                    También puedes apoyar dejando una ⭐⭐⭐⭐⭐ reseña en WordPress.org
+                </p>
+            </div>
+        </div>
         <?php
     }
 }

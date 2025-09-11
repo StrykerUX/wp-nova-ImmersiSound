@@ -131,13 +131,12 @@ function nova_sound_fx_init() {
     // Check and run migrations if needed
     nova_sound_fx_check_version();
     
-    // Handle setup wizard redirect
+    // Handle setup wizard redirect - ALWAYS show on activation
     if (get_transient('nova_sound_fx_activation_redirect')) {
         delete_transient('nova_sound_fx_activation_redirect');
-        if (!get_option('nova_sound_fx_setup_complete', false)) {
-            wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx-setup'));
-            exit;
-        }
+        // Always redirect to setup wizard on activation
+        wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx-setup'));
+        exit;
     }
     
     $plugin = new Nova_Sound_FX();

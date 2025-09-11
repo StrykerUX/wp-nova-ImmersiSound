@@ -433,141 +433,77 @@ class Nova_Sound_FX_Admin {
                 
                 <!-- Support Tab -->
                 <div id="support" class="tab-pane">
-                    <h2><?php _e('Programa de Soporte', 'nova-sound-fx'); ?></h2>
+                    <h2><?php _e('Apoya el Desarrollo', 'nova-sound-fx'); ?></h2>
                     
-                    <?php 
-                    $settings = get_option('nova_sound_fx_settings', array());
-                    $is_supporter = !empty($settings['show_support_widget']) || !empty($settings['show_admin_banner']);
-                    ?>
-                    
-                    <?php if ($is_supporter): ?>
-                    <!-- Active Supporter Status -->
-                    <div style="background: linear-gradient(135deg, #11ba82 0%, #0ea968 100%); color: white; padding: 30px; border-radius: 12px; margin: 20px 0;">
-                        <h3 style="color: white; margin-top: 0;">🎆 <?php _e('¡Eres un Supporter Activo!', 'nova-sound-fx'); ?></h3>
-                        <p style="font-size: 16px; line-height: 1.6;">
-                            <?php _e('Gracias por tu apoyo continuo. Tu contribución ayuda a mantener Nova ImmersiSound gratuito y actualizado con nuevas características.', 'nova-sound-fx'); ?>
+                    <!-- Main Support Section -->
+                    <div style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #f7f9fc 0%, #fff 100%); border-radius: 12px; margin: 20px 0;">
+                        <h3 style="font-size: 28px; color: #333; margin-bottom: 20px;">
+                            ☕ <?php _e('¿Te gusta Nova ImmersiSound?', 'nova-sound-fx'); ?>
+                        </h3>
+                        <p style="font-size: 18px; color: #666; line-height: 1.8; max-width: 600px; margin: 0 auto 30px;">
+                            <?php _e('Este plugin es 100% gratuito y siempre lo será. Si te ha ayudado en tu proyecto, considera invitarme un café para mantenerlo actualizado.', 'nova-sound-fx'); ?>
                         </p>
-                        <div style="margin-top: 20px;">
-                            <strong><?php _e('Beneficios actuales:', 'nova-sound-fx'); ?></strong>
-                            <ul style="margin-top: 10px;">
-                                <li>✅ <?php _e('Acceso prioritario a nuevas características', 'nova-sound-fx'); ?></li>
-                                <li>✅ <?php _e('Soporte técnico prioritario', 'nova-sound-fx'); ?></li>
-                                <li>✅ <?php _e('Badge de Supporter en el plugin', 'nova-sound-fx'); ?></li>
-                                <li>✅ <?php _e('Voz en el desarrollo de futuras funciones', 'nova-sound-fx'); ?></li>
-                            </ul>
-                        </div>
-                        <div style="margin-top: 25px;">
-                            <a href="https://buymeacoffee.com/imstryker" target="_blank" class="button button-secondary" style="background: white; color: #11ba82; border: none; padding: 10px 20px; font-weight: bold;">
-                                ☕ <?php _e('Hacer otra donación', 'nova-sound-fx'); ?>
-                            </a>
+                        
+                        <a href="https://buymeacoffee.com/imstryker" target="_blank" class="button" style="background: linear-gradient(135deg, #11ba82 0%, #0ea968 100%); color: white; border: none; padding: 16px 40px; font-size: 18px; font-weight: bold; border-radius: 30px; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(17, 186, 130, 0.3);">
+                            ☕ <?php _e('Invitarme un Café', 'nova-sound-fx'); ?>
+                        </a>
+                        
+                        <p style="margin-top: 20px; font-size: 14px; color: #999;">
+                            <?php _e('Tu apoyo significa mucho para mí ❤️', 'nova-sound-fx'); ?>
+                        </p>
+                    </div>
+                    
+                    <!-- Why Support Section -->
+                    <div style="margin-top: 40px;">
+                        <h3 style="font-size: 20px; margin-bottom: 20px;"><?php _e('¿Por qué apoyar?', 'nova-sound-fx'); ?></h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; border-left: 4px solid #007cba;">
+                                <h4 style="margin-top: 0; color: #007cba;">💻 <?php _e('Desarrollo Continuo', 'nova-sound-fx'); ?></h4>
+                                <p style="color: #666; margin: 10px 0 0;">
+                                    <?php _e('Tu apoyo me permite dedicar tiempo a mejorar el plugin, corregir bugs y agregar nuevas características que la comunidad solicita.', 'nova-sound-fx'); ?>
+                                </p>
+                            </div>
+                            
+                            <div style="background: #f0fff4; padding: 20px; border-radius: 8px; border-left: 4px solid #11ba82;">
+                                <h4 style="margin-top: 0; color: #11ba82;">🎆 <?php _e('Mantenerlo Gratuito', 'nova-sound-fx'); ?></h4>
+                                <p style="color: #666; margin: 10px 0 0;">
+                                    <?php _e('Con tu ayuda, Nova ImmersiSound puede seguir siendo gratuito para todos, sin versiones premium ni funciones bloqueadas.', 'nova-sound-fx'); ?>
+                                </p>
+                            </div>
+                            
+                            <div style="background: #fff9f0; padding: 20px; border-radius: 8px; border-left: 4px solid #ff9800;">
+                                <h4 style="margin-top: 0; color: #ff9800;">✨ <?php _e('Soporte Personal', 'nova-sound-fx'); ?></h4>
+                                <p style="color: #666; margin: 10px 0 0;">
+                                    <?php _e('Los supporters reciben respuestas prioritarias a sus preguntas y pueden sugerir nuevas funcionalidades directamente.', 'nova-sound-fx'); ?>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <?php else: ?>
-                    <!-- Inactive Supporter Status -->
-                    <div style="background: #f7f9fc; border: 2px dashed #ddd; padding: 30px; border-radius: 12px; margin: 20px 0; text-align: center;">
-                        <h3 style="margin-top: 0; color: #666;"><?php _e('🚀 Únete al Programa de Supporters', 'nova-sound-fx'); ?></h3>
-                        <p style="font-size: 16px; color: #666; line-height: 1.6; max-width: 600px; margin: 0 auto;">
-                            <?php _e('Nova ImmersiSound es completamente gratuito gracias a supporters como tú. Considera apoyar el desarrollo continuo del plugin.', 'nova-sound-fx'); ?>
+                    
+                    <!-- Impact Section -->
+                    <div style="margin-top: 40px; padding: 30px; background: #f7f9fc; border-radius: 12px;">
+                        <h3 style="margin-top: 0;"><?php _e('Tu Impacto', 'nova-sound-fx'); ?></h3>
+                        <p style="font-size: 16px; color: #666; line-height: 1.6;">
+                            <?php _e('Cada café que recibes es más que una donación. Es un voto de confianza, una palmada en la espalda que dice "sigue adelante". Como desarrollador independiente, tu apoyo no solo financia el hosting y las herramientas, sino que también me motiva a seguir mejorando este plugin que tanto amor ha recibido de la comunidad.', 'nova-sound-fx'); ?>
                         </p>
-                        <div style="margin: 30px 0;">
-                            <a href="https://buymeacoffee.com/imstryker" target="_blank" class="button button-primary" style="background: linear-gradient(135deg, #11ba82 0%, #0ea968 100%); border: none; padding: 12px 30px; font-size: 16px; font-weight: bold;">
-                                ☕ <?php _e('Convertirme en Supporter', 'nova-sound-fx'); ?>
-                            </a>
-                        </div>
+                        <p style="font-size: 16px; color: #666; line-height: 1.6; margin-top: 15px;">
+                            <strong><?php _e('Cada café cuenta. Cada supporter importa. Gracias por considerar apoyar mi trabajo.', 'nova-sound-fx'); ?></strong>
+                        </p>
                     </div>
-                    <?php endif; ?>
                     
-                    <form id="support-settings-form">
-                        <h3><?php _e('Configuración de Soporte', 'nova-sound-fx'); ?></h3>
-                        
-                        <table class="form-table">
-                            <tr>
-                                <th scope="row">
-                                    <label for="show-support-widget"><?php _e('Widget de Apoyo', 'nova-sound-fx'); ?></label>
-                                </th>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" id="show-support-widget" name="show_support_widget" value="1" <?php checked(!empty($settings['show_support_widget'])); ?>>
-                                        <?php _e('Mostrar enlace de apoyo en mi sitio web', 'nova-sound-fx'); ?>
-                                    </label>
-                                    <?php if ($is_supporter): ?>
-                                    <p class="description" style="color: #11ba82;">
-                                        ✅ <?php _e('Gracias por mantener activo el widget de soporte. Esto ayuda enormemente al desarrollo.', 'nova-sound-fx'); ?>
-                                    </p>
-                                    <?php else: ?>
-                                    <p class="description">
-                                        <?php _e('Activa para mostrar un discreto enlace de "Buy Me a Coffee" y ayudar a otros a descubrir el plugin.', 'nova-sound-fx'); ?>
-                                    </p>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <th scope="row">
-                                    <label for="show-admin-banner"><?php _e('Banner de Admin', 'nova-sound-fx'); ?></label>
-                                </th>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" id="show-admin-banner" name="show_admin_banner" value="1" <?php checked(!empty($settings['show_admin_banner'])); ?>>
-                                        <?php _e('Mostrar banner de apoyo en el admin', 'nova-sound-fx'); ?>
-                                    </label>
-                                    <p class="description">
-                                        <?php _e('Muestra un recordatorio ocasional en el panel de administración.', 'nova-sound-fx'); ?>
-                                    </p>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <th scope="row">
-                                    <label for="show-support-links"><?php _e('Enlaces Rápidos', 'nova-sound-fx'); ?></label>
-                                </th>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" id="show-support-links" name="show_support_links" value="1" <?php checked(!empty($settings['show_support_links'])); ?>>
-                                        <?php _e('Mostrar enlace de soporte en la lista de plugins', 'nova-sound-fx'); ?>
-                                    </label>
-                                    <p class="description">
-                                        <?php _e('Agrega un enlace "Support" en la página de plugins de WordPress.', 'nova-sound-fx'); ?>
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                        
-                        <?php if (!$is_supporter): ?>
-                        <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                            <p style="margin: 0; color: #856404;">
-                                <strong>⚠️ <?php _e('Nota:', 'nova-sound-fx'); ?></strong>
-                                <?php _e('Al desactivar todas las opciones de soporte, perderás acceso a:', 'nova-sound-fx'); ?>
-                            </p>
-                            <ul style="margin: 10px 0 0 20px; color: #856404;">
-                                <li><?php _e('Actualizaciones prioritarias', 'nova-sound-fx'); ?></li>
-                                <li><?php _e('Nuevas características beta', 'nova-sound-fx'); ?></li>
-                                <li><?php _e('Soporte técnico prioritario', 'nova-sound-fx'); ?></li>
-                            </ul>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <p class="submit">
-                            <button type="submit" class="button button-primary"><?php _e('Guardar Configuración de Soporte', 'nova-sound-fx'); ?></button>
+                    <!-- Alternative Support -->
+                    <div style="margin-top: 40px; text-align: center; padding: 20px; border-top: 1px solid #ddd;">
+                        <h4><?php _e('Otras formas de apoyar', 'nova-sound-fx'); ?></h4>
+                        <p style="color: #666; margin: 10px 0;">
+                            <?php _e('Si no puedes donar, puedes ayudar de otras maneras:', 'nova-sound-fx'); ?>
                         </p>
-                    </form>
-                    
-                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd;">
-                        <h3><?php _e('Estadísticas de la Comunidad', 'nova-sound-fx'); ?></h3>
-                        <div style="display: flex; gap: 20px; margin-top: 20px;">
-                            <div style="flex: 1; background: #f0f8ff; padding: 20px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: bold; color: #007cba;">1,247</div>
-                                <div style="color: #666; margin-top: 5px;"><?php _e('Supporters Activos', 'nova-sound-fx'); ?></div>
-                            </div>
-                            <div style="flex: 1; background: #f0fff4; padding: 20px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: bold; color: #11ba82;">73%</div>
-                                <div style="color: #666; margin-top: 5px;"><?php _e('Mantienen el widget activo', 'nova-sound-fx'); ?></div>
-                            </div>
-                            <div style="flex: 1; background: #fff9f0; padding: 20px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: bold; color: #ff9800;">$4,892</div>
-                                <div style="color: #666; margin-top: 5px;"><?php _e('Recaudado este mes', 'nova-sound-fx'); ?></div>
-                            </div>
-                        </div>
+                        <ul style="text-align: left; max-width: 500px; margin: 20px auto; color: #666;">
+                            <li>⭐ <?php _e('Deja una reseña de 5 estrellas en WordPress.org', 'nova-sound-fx'); ?></li>
+                            <li>📢 <?php _e('Comparte el plugin con otros desarrolladores', 'nova-sound-fx'); ?></li>
+                            <li>🐛 <?php _e('Reporta bugs o sugiere mejoras en GitHub', 'nova-sound-fx'); ?></li>
+                            <li>🌍 <?php _e('Traduce el plugin a tu idioma', 'nova-sound-fx'); ?></li>
+                        </ul>
                     </div>
                 </div>
             </div>
