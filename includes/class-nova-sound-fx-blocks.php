@@ -1,6 +1,6 @@
 <?php
 /**
- * Gutenberg blocks functionality for Nova Sound FX
+ * Gutenberg blocks functionality for Nova ImmersiSound
  */
 class Nova_Sound_FX_Blocks {
     

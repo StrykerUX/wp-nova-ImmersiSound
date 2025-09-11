@@ -1,6 +1,6 @@
 <?php
 /**
- * Utility functions for Nova Sound FX
+ * Utility functions for Nova ImmersiSound
  */
 class Nova_Sound_FX_Utils {
     
@@ -121,7 +121,7 @@ class Nova_Sound_FX_Utils {
      */
     public static function log($message, $type = 'info') {
         if (defined('WP_DEBUG') && WP_DEBUG === true) {
-            error_log('[Nova Sound FX ' . $type . '] ' . print_r($message, true));
+            error_log('[Nova ImmersiSound ' . $type . '] ' . print_r($message, true));
         }
     }
     
@@ -134,7 +134,7 @@ class Nova_Sound_FX_Utils {
         // Check PHP version
         if (version_compare(PHP_VERSION, '7.0', '<')) {
             $errors[] = sprintf(
-                __('Nova Sound FX requiere PHP 7.0 o superior. Tu versión actual es %s.', 'nova-sound-fx'),
+                __('Nova ImmersiSound requiere PHP 7.0 o superior. Tu versión actual es %s.', 'nova-sound-fx'),
                 PHP_VERSION
             );
         }
@@ -142,14 +142,14 @@ class Nova_Sound_FX_Utils {
         // Check WordPress version
         if (version_compare(get_bloginfo('version'), '5.0', '<')) {
             $errors[] = sprintf(
-                __('Nova Sound FX requiere WordPress 5.0 o superior. Tu versión actual es %s.', 'nova-sound-fx'),
+                __('Nova ImmersiSound requiere WordPress 5.0 o superior. Tu versión actual es %s.', 'nova-sound-fx'),
                 get_bloginfo('version')
             );
         }
         
         // Check if JavaScript is enabled
         if (!wp_script_is('jquery', 'registered')) {
-            $errors[] = __('jQuery no está disponible. Nova Sound FX requiere jQuery para funcionar.', 'nova-sound-fx');
+            $errors[] = __('jQuery no está disponible. Nova ImmersiSound requiere jQuery para funcionar.', 'nova-sound-fx');
         }
         
         return $errors;
@@ -191,7 +191,7 @@ class Nova_Sound_FX_Utils {
      */
     public static function get_plugin_info() {
         return array(
-            'name' => 'Nova Sound FX',
+            'name' => 'Nova ImmersiSound',
             'version' => NOVA_SOUND_FX_VERSION,
             'author' => 'Tu Nombre',
             'website' => 'https://tu-sitio.com',

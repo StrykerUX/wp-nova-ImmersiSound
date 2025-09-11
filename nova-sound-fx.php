@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Nova Sound FX
- * Plugin URI: https://github.com/yourusername/nova-sound-fx
+ * Plugin Name: Nova ImmersiSound
+ * Plugin URI: https://github.com/yourusername/nova-immersisound
  * Description: Add immersive sound effects to your WordPress site with CSS selectors and page transitions
  * Version: 1.1.0
  * Author: Your Name
@@ -53,7 +53,7 @@ function nova_sound_fx_deactivate() {
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'nova_sound_fx_action_links');
 function nova_sound_fx_action_links($links) {
     $settings_link = '<a href="' . admin_url('admin.php?page=nova-sound-fx') . '">' . __('Settings', 'nova-sound-fx') . '</a>';
-    $support_link = '<a href="https://buymeacoffee.com/imstryker" target="_blank" style="color: #5F7FFF; font-weight: bold;">🚀 ' . __('Support', 'nova-sound-fx') . '</a>';
+    $support_link = '<a href="https://buymeacoffee.com/imstryker" target="_blank" style="color: #11ba82; font-weight: bold;">' . __('Support this plugin', 'nova-sound-fx') . '</a>';
     
     array_unshift($links, $support_link);
     array_unshift($links, $settings_link);

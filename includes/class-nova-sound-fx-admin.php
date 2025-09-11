@@ -16,8 +16,8 @@ class Nova_Sound_FX_Admin {
      */
     public function add_admin_menu() {
         add_menu_page(
-            __('Nova Sound FX', 'nova-sound-fx'),
-            __('Nova Sound FX', 'nova-sound-fx'),
+            __('Nova ImmersiSound', 'nova-sound-fx'),
+            __('Nova ImmersiSound', 'nova-sound-fx'),
             'manage_options',
             'nova-sound-fx',
             array($this, 'render_admin_page'),
@@ -42,7 +42,7 @@ class Nova_Sound_FX_Admin {
                     </div>
                     <div class="nova-support-text">
                         <h3><?php _e('Sponsor Future Improvements', 'nova-sound-fx'); ?></h3>
-                        <p><?php _e('Help keep Nova Sound FX free and continuously updated with new features!', 'nova-sound-fx'); ?></p>
+                        <p><?php _e('Help keep Nova ImmersiSound free and continuously updated with new features!', 'nova-sound-fx'); ?></p>
                     </div>
                     <div class="nova-support-action">
                         <a href="https://buymeacoffee.com/imstryker" target="_blank" class="nova-support-button">

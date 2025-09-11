@@ -1,5 +1,5 @@
 /**
- * Nova Sound FX Gutenberg Blocks
+ * Nova ImmersiSound Gutenberg Blocks
  */
 (function(blocks, element, components, editor, i18n) {
     const el = element.createElement;
@@ -33,7 +33,7 @@
      * Bloque de Controles de Sonido
      */
     registerBlockType('nova-sound-fx/controls', {
-        title: __('Nova Sound FX Controls', 'nova-sound-fx'),
+        title: __('Nova ImmersiSound Controls', 'nova-sound-fx'),
         description: __('Add sound controls widget to your page', 'nova-sound-fx'),
         icon: novaSoundIcon,
         category: 'widgets',
@@ -118,7 +118,7 @@
                         className: `nova-preview-badge nova-preview-${style}` 
                     },
                         el('span', { className: 'dashicons dashicons-format-audio' }),
-                        el('span', {}, __('Nova Sound FX Controls', 'nova-sound-fx'))
+                        el('span', {}, __('Nova ImmersiSound Controls', 'nova-sound-fx'))
                     ),
                     el('p', { className: 'nova-preview-info' }, 
                         __('The sound controls will appear here in the frontend.', 'nova-sound-fx')

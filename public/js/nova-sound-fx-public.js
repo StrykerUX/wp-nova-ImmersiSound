@@ -1,11 +1,11 @@
 /**
- * Nova Sound FX Public JavaScript - Versión Mejorada
+ * Nova ImmersiSound Public JavaScript - Versión Mejorada
  * Con soporte completo para todos los tipos de eventos
  */
 (function($) {
     'use strict';
 
-    // Nova Sound FX Class
+    // Nova ImmersiSound Class
     class NovaSoundFX {
         constructor() {
             this.settings = novaSoundFX.settings || {};
@@ -53,10 +53,10 @@
             // Verificar si los efectos visuales están deshabilitados
             if (this.settings.show_visual_effects === false) {
                 bodyElement.classList.add('nova-hide-visual-effects');
-                console.log('Nova Sound FX: Efectos visuales deshabilitados');
+                console.log('Nova ImmersiSound: Efectos visuales deshabilitados');
             } else {
                 bodyElement.classList.remove('nova-hide-visual-effects');
-                console.log('Nova Sound FX: Efectos visuales habilitados');
+                console.log('Nova ImmersiSound: Efectos visuales habilitados');
             }
         }
         
@@ -69,19 +69,19 @@
             // Aplicar border radius personalizado
             if (this.settings.border_radius !== undefined) {
                 root.style.setProperty('--nova-border-radius', `${this.settings.border_radius}px`);
-                console.log(`Nova Sound FX: Border radius aplicado: ${this.settings.border_radius}px`);
+                console.log(`Nova ImmersiSound: Border radius aplicado: ${this.settings.border_radius}px`);
             }
             
             // Aplicar color de fondo del botón flotante
             if (this.settings.floating_button_bg) {
                 root.style.setProperty('--nova-floating-button-bg', this.settings.floating_button_bg);
-                console.log(`Nova Sound FX: Color de fondo del botón aplicado: ${this.settings.floating_button_bg}`);
+                console.log(`Nova ImmersiSound: Color de fondo del botón aplicado: ${this.settings.floating_button_bg}`);
             }
             
             // Aplicar color del icono
             if (this.settings.floating_button_icon) {
                 root.style.setProperty('--nova-floating-button-icon', this.settings.floating_button_icon);
-                console.log(`Nova Sound FX: Color del icono aplicado: ${this.settings.floating_button_icon}`);
+                console.log(`Nova ImmersiSound: Color del icono aplicado: ${this.settings.floating_button_icon}`);
             }
             
             // Aplicar tamaño del botón
@@ -94,7 +94,7 @@
                 
                 const buttonSize = sizeMap[this.settings.floating_button_size] || '56px';
                 root.style.setProperty('--nova-floating-button-size', buttonSize);
-                console.log(`Nova Sound FX: Tamaño del botón aplicado: ${this.settings.floating_button_size} (${buttonSize})`);
+                console.log(`Nova ImmersiSound: Tamaño del botón aplicado: ${this.settings.floating_button_size} (${buttonSize})`);
             }
         }
         
@@ -105,7 +105,7 @@
             // Detectar cuando el usuario vuelve a la página (cambio de tab, minimizar/maximizar ventana)
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden && this.hasUserConsent && !this.isAudioContextUnlocked) {
-                    console.log('Nova Sound FX: Página visible - intentando reactivación automática');
+                    console.log('Nova ImmersiSound: Página visible - intentando reactivación automática');
                     this.attemptAutoReactivationOnVisibility();
                 }
             });
@@ -113,7 +113,7 @@
             // Detectar focus de la ventana
             window.addEventListener('focus', () => {
                 if (this.hasUserConsent && !this.isAudioContextUnlocked) {
-                    console.log('Nova Sound FX: Ventana enfocada - intentando reactivación automática');
+                    console.log('Nova ImmersiSound: Ventana enfocada - intentando reactivación automática');
                     this.attemptAutoReactivationOnVisibility();
                 }
             });
@@ -125,7 +125,7 @@
             const detectInteraction = () => {
                 if (!interactionDetected && this.hasUserConsent && !this.isAudioContextUnlocked) {
                     interactionDetected = true;
-                    console.log('Nova Sound FX: Interacción detectada - intentando activación');
+                    console.log('Nova ImmersiSound: Interacción detectada - intentando activación');
                     setTimeout(() => {
                         this.attemptAutoReactivationOnVisibility();
                     }, 100);
@@ -153,7 +153,7 @@
                     try {
                         const success = await technique();
                         if (success) {
-                            console.log('Nova Sound FX: Reactivación automática exitosa');
+                            console.log('Nova ImmersiSound: Reactivación automática exitosa');
                             this.isAudioContextUnlocked = true;
                             this.finishAudioSetup();
                             this.hideAudioPendingNotification();
@@ -171,7 +171,7 @@
                 this.setupReducedActivationListeners();
                 
             } catch (error) {
-                console.log('Nova Sound FX: Error en reactivación automática:', error);
+                console.log('Nova ImmersiSound: Error en reactivación automática:', error);
                 this.setupReducedActivationListeners();
             }
         }
@@ -189,7 +189,7 @@
                         return true;
                     }
                 } catch (error) {
-                    console.log('Nova Sound FX: Error al reanudar contexto:', error);
+                    console.log('Nova ImmersiSound: Error al reanudar contexto:', error);
                 }
             }
             return false;
@@ -242,13 +242,13 @@
          * Setup de listeners reducidos (menos invasivos que el método completo)
          */
         setupReducedActivationListeners() {
-            console.log('Nova Sound FX: Configurando listeners reducidos...');
+            console.log('Nova ImmersiSound: Configurando listeners reducidos...');
             
             // Solo eventos esenciales
             const essentialEvents = ['click', 'touchstart'];
             
             const reducedHandler = async (event) => {
-                console.log('Nova Sound FX: Activación con evento reducido:', event.type);
+                console.log('Nova ImmersiSound: Activación con evento reducido:', event.type);
                 
                 const success = await this.tryUnlockFromEvent();
                 
@@ -309,14 +309,14 @@
          * Intentar inicialización inmediata de audio (técnica avanzada)
          */
         async attemptImmediateAudioInitialization() {
-            console.log('Nova Sound FX: Intentando inicialización inmediata de audio...');
+            console.log('Nova ImmersiSound: Intentando inicialización inmediata de audio...');
             
             try {
                 // Método 1: Intentar inicialización directa con audio silencioso
                 const success = await this.tryDirectAudioInitialization();
                 
                 if (success) {
-                    console.log('Nova Sound FX: Audio inicializado exitosamente de forma directa');
+                    console.log('Nova ImmersiSound: Audio inicializado exitosamente de forma directa');
                     this.isAudioContextUnlocked = true;
                     this.finishAudioSetup();
                     return;
@@ -326,7 +326,7 @@
                 this.setupMultipleActivationListeners();
                 
             } catch (error) {
-                console.warn('Nova Sound FX: Error en inicialización inmediata:', error);
+                console.warn('Nova ImmersiSound: Error en inicialización inmediata:', error);
                 this.setupMultipleActivationListeners();
             }
         }
@@ -359,7 +359,7 @@
                 }
                 
             } catch (error) {
-                console.log('Nova Sound FX: Inicialización directa falló (esperado):', error.message);
+                console.log('Nova ImmersiSound: Inicialización directa falló (esperado):', error.message);
             }
             
             return false;
@@ -406,7 +406,7 @@
          * Configurar múltiples listeners de activación (método fallback)
          */
         setupMultipleActivationListeners() {
-            console.log('Nova Sound FX: Configurando listeners múltiples para activación...');
+            console.log('Nova ImmersiSound: Configurando listeners múltiples para activación...');
             
             // Lista de eventos que pueden desbloquear audio
             const unlockEvents = [
@@ -421,7 +421,7 @@
                     return;
                 }
                 
-                console.log('Nova Sound FX: Intentando desbloqueo con evento:', event.type);
+                console.log('Nova ImmersiSound: Intentando desbloqueo con evento:', event.type);
                 
                 const success = await this.tryUnlockFromEvent();
                 
@@ -459,7 +459,7 @@
                     unlockEvents.forEach(eventName => {
                         document.removeEventListener(eventName, unlockHandler, true);
                     });
-                    console.log('Nova Sound FX: Timeout - listeners de desbloqueo removidos');
+                    console.log('Nova ImmersiSound: Timeout - listeners de desbloqueo removidos');
                 }
             }, 30000);
         }
@@ -487,7 +487,7 @@
                 }
                 
             } catch (error) {
-                console.log('Nova Sound FX: Error en desbloqueo desde evento:', error);
+                console.log('Nova ImmersiSound: Error en desbloqueo desde evento:', error);
             }
             
             return false;
@@ -497,7 +497,7 @@
          * Finalizar configuración de audio después de desbloqueo exitoso
          */
         finishAudioSetup() {
-            console.log('Nova Sound FX: Finalizando configuración de audio...');
+            console.log('Nova ImmersiSound: Finalizando configuración de audio...');
             
             // Cargar mapeos de sonido
             this.loadSoundMappings();
@@ -518,7 +518,7 @@
             }
             
             this.isInitialized = true;
-            console.log('Nova Sound FX: Audio completamente configurado y listo');
+            console.log('Nova ImmersiSound: Audio completamente configurado y listo');
         }
         
         /**
@@ -624,7 +624,7 @@
                     return;
                 }
                 
-                console.log('Nova Sound FX: Auto-activando audio por click del usuario');
+                console.log('Nova ImmersiSound: Auto-activando audio por click del usuario');
                 
                 // Activar audio inmediatamente
                 this.activateAudioFromUserInteraction();
@@ -644,7 +644,7 @@
             document.addEventListener('click', autoActivateHandler, true);
             document.addEventListener('touchstart', autoActivateHandler, true);
             
-            console.log('Nova Sound FX: Auto-reactivación configurada - esperando click del usuario');
+            console.log('Nova ImmersiSound: Auto-reactivación configurada - esperando click del usuario');
         }
         
         /**
@@ -949,9 +949,9 @@
                 // Precargar sonidos frecuentemente usados
                 this.preloadSounds();
                 
-                console.log('Nova Sound FX: Contexto de audio inicializado exitosamente');
+                console.log('Nova ImmersiSound: Contexto de audio inicializado exitosamente');
             } catch (e) {
-                console.error('Nova Sound FX: Error al inicializar el contexto de audio', e);
+                console.error('Nova ImmersiSound: Error al inicializar el contexto de audio', e);
             }
         }
         
@@ -1290,7 +1290,7 @@
                 // Precargar sonidos frecuentemente usados
                 this.preloadSounds();
             } catch (e) {
-                console.error('Nova Sound FX: Error al inicializar el contexto de audio', e);
+                console.error('Nova ImmersiSound: Error al inicializar el contexto de audio', e);
             }
         }
         
@@ -1384,7 +1384,7 @@
         addSoundMapping(mapping) {
             // Solo permitir selectores de clase e ID
             if (!/^[#.][\w-]+(\s*,\s*[#.][\w-]+)*$/.test(mapping.css_selector)) {
-                console.warn('Nova Sound FX: Selector inválido:', mapping.css_selector);
+                console.warn('Nova ImmersiSound: Selector inválido:', mapping.css_selector);
                 return;
             }
             
@@ -1570,7 +1570,7 @@
                 }
                 
             } catch (error) {
-                console.error('Nova Sound FX: Error al reproducir sonido', error);
+                console.error('Nova ImmersiSound: Error al reproducir sonido', error);
                 
                 // Fallback a HTML5 Audio
                 this.playFallbackAudio(url, options);
@@ -1589,7 +1589,7 @@
                 const arrayBuffer = await response.arrayBuffer();
                 return await this.audioContext.decodeAudioData(arrayBuffer);
             } catch (error) {
-                console.error('Nova Sound FX: Error al cargar audio', url, error);
+                console.error('Nova ImmersiSound: Error al cargar audio', url, error);
                 return null;
             }
         }
@@ -1602,10 +1602,10 @@
                 const audio = new Audio(url);
                 audio.volume = (options.volume || 1) * (this.userPreferences.volume / 100);
                 audio.play().catch(e => {
-                    console.error('Nova Sound FX: Fallo el audio de respaldo', e);
+                    console.error('Nova ImmersiSound: Fallo el audio de respaldo', e);
                 });
             } catch (e) {
-                console.error('Nova Sound FX: Error crítico en audio', e);
+                console.error('Nova ImmersiSound: Error crítico en audio', e);
             }
         }
         
@@ -1618,7 +1618,7 @@
             
             soundUrls.forEach(url => {
                 this.loadAudioBuffer(url).catch(e => {
-                    console.error('Nova Sound FX: Error al precargar sonido', url, e);
+                    console.error('Nova ImmersiSound: Error al precargar sonido', url, e);
                 });
             });
         }
@@ -1738,7 +1738,7 @@
                     const regex = new RegExp(pattern.substring(6));
                     return regex.test(url);
                 } catch (e) {
-                    console.error('Nova Sound FX: Patrón regex inválido', pattern);
+                    console.error('Nova ImmersiSound: Patrón regex inválido', pattern);
                     return false;
                 }
             }
@@ -1752,7 +1752,7 @@
                 const regex = new RegExp('^' + regexPattern + '$');
                 return regex.test(url);
             } catch (e) {
-                console.error('Nova Sound FX: Patrón inválido', pattern);
+                console.error('Nova ImmersiSound: Patrón inválido', pattern);
                 return false;
             }
         }

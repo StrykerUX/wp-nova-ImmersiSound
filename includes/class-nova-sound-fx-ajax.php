@@ -1,6 +1,6 @@
 <?php
 /**
- * AJAX functionality for Nova Sound FX
+ * AJAX functionality for Nova ImmersiSound
  */
 class Nova_Sound_FX_Ajax {
     

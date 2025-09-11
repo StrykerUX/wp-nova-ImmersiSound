@@ -1,5 +1,5 @@
 /**
- * Nova Sound FX Admin JavaScript - Versión Reparada
+ * Nova ImmersiSound Admin JavaScript - Versión Reparada
  * Desarrollado por un experto WordPress con 12+ años de experiencia
  */
 (function($) {
