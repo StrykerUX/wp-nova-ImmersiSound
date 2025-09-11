@@ -28,15 +28,23 @@ function nova_sound_fx_activate() {
     // Create database tables
     nova_sound_fx_create_tables();
     
-    // Set default options
+    // Set default options - EVERYTHING OFF until user accepts terms
     add_option('nova_sound_fx_version', NOVA_SOUND_FX_VERSION);
     add_option('nova_sound_fx_settings', array(
-        'enable_sounds' => true,
+        'enable_sounds' => false, // Off until setup
         'default_volume' => 50,
         'mobile_enabled' => false,
         'respect_prefers_reduced_motion' => true,
-        'preview_mode' => false
+        'preview_mode' => false,
+        'save_user_preferences' => false, // Off until consent
+        'show_support_widget' => false, // Off until consent
+        'show_admin_banner' => false, // Off until consent
+        'terms_accepted' => false,
+        'setup_complete' => false
     ));
+    
+    // Set activation redirect flag
+    set_transient('nova_sound_fx_activation_redirect', true, 30);
     
     // Flush rewrite rules to prevent URL conflicts
     flush_rewrite_rules();
@@ -53,9 +61,14 @@ function nova_sound_fx_deactivate() {
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'nova_sound_fx_action_links');
 function nova_sound_fx_action_links($links) {
     $settings_link = '<a href="' . admin_url('admin.php?page=nova-sound-fx') . '">' . __('Settings', 'nova-sound-fx') . '</a>';
-    $support_link = '<a href="https://buymeacoffee.com/imstryker" target="_blank" style="color: #11ba82; font-weight: bold;">' . __('Support this plugin', 'nova-sound-fx') . '</a>';
     
-    array_unshift($links, $support_link);
+    // Only show support link if user has accepted terms
+    $settings = get_option('nova_sound_fx_settings', array());
+    if (!empty($settings['terms_accepted']) && !empty($settings['show_support_links'])) {
+        $support_link = '<a href="https://buymeacoffee.com/imstryker" target="_blank" style="color: #11ba82; font-weight: bold;">' . __('Support', 'nova-sound-fx') . '</a>';
+        array_unshift($links, $support_link);
+    }
+    
     array_unshift($links, $settings_link);
     
     return $links;
@@ -111,11 +124,21 @@ require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/class-nova-sound-fx-shortcodes
 require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/class-nova-sound-fx-ajax.php';
 require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/class-nova-sound-fx-utils.php';
 require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/class-nova-sound-fx-blocks.php';
+require_once NOVA_SOUND_FX_PLUGIN_DIR . 'includes/class-nova-sound-fx-setup.php';
 
 // Initialize the plugin
 function nova_sound_fx_init() {
     // Check and run migrations if needed
     nova_sound_fx_check_version();
+    
+    // Handle setup wizard redirect
+    if (get_transient('nova_sound_fx_activation_redirect')) {
+        delete_transient('nova_sound_fx_activation_redirect');
+        if (!get_option('nova_sound_fx_setup_complete', false)) {
+            wp_safe_redirect(admin_url('admin.php?page=nova-sound-fx-setup'));
+            exit;
+        }
+    }
     
     $plugin = new Nova_Sound_FX();
     $plugin->run();

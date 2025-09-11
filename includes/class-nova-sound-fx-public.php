@@ -242,53 +242,63 @@ class Nova_Sound_FX_Public {
     }
     
     /**
-     * Output Buy Me a Coffee widget
+     * Output support widget (simplified, no external scripts)
      */
     public function output_bmc_widget() {
         $settings = get_option('nova_sound_fx_settings', array());
         
-        // Check if BMC widget is enabled
-        if (empty($settings['bmc_widget_enabled'])) {
+        // Check if support widget is enabled AND user has accepted terms
+        if (empty($settings['show_support_widget']) || empty($settings['terms_accepted'])) {
             return;
         }
         
-        // Check pages setting
-        $widget_pages = isset($settings['bmc_widget_pages']) ? $settings['bmc_widget_pages'] : 'all';
-        
-        // Determine if we should show the widget on this page
-        $show_widget = false;
-        switch ($widget_pages) {
-            case 'all':
-                $show_widget = true;
-                break;
-            case 'home':
-                $show_widget = is_front_page() || is_home();
-                break;
-            case 'posts':
-                $show_widget = is_single();
-                break;
-            case 'pages':
-                $show_widget = is_page();
-                break;
-        }
-        
-        if (!$show_widget) {
+        // Only show on front-end, not in admin
+        if (is_admin()) {
             return;
         }
         
-        $position = isset($settings['bmc_widget_position']) ? $settings['bmc_widget_position'] : 'Right';
-        
+        // Simple link-based widget without external scripts
         ?>
-        <script data-name="BMC-Widget" 
-                data-cfasync="false" 
-                src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
-                data-id="imstryker" 
-                data-description="Support me on Buy me a coffee!" 
-                data-message="🚀 Sponsor future improvements" 
-                data-color="#5F7FFF" 
-                data-position="<?php echo esc_attr($position); ?>" 
-                data-x_margin="18" 
-                data-y_margin="18"></script>
+        <style>
+        .nova-support-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999999;
+        }
+        .nova-support-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #11ba82 0%, #0ea968 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(17, 186, 130, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .nova-support-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 186, 130, 0.4);
+            color: white;
+        }
+        .nova-support-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        </style>
+        <div class="nova-support-widget">
+            <a href="https://buymeacoffee.com/imstryker" target="_blank" rel="noopener" class="nova-support-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v4M10 1v4M14 1v4"/>
+                </svg>
+                <?php _e('Support', 'nova-sound-fx'); ?>
+            </a>
+        </div>
         <?php
     }
 }

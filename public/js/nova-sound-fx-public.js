@@ -1305,18 +1305,21 @@
                 audioConsent: null
             };
             
-            try {
-                const saved = localStorage.getItem('nova_sound_fx_preferences');
-                if (saved) {
-                    return Object.assign(defaults, JSON.parse(saved));
-                }
-            } catch (e) {
-                // Fallback a cookies si localStorage falla
-                const cookieValue = this.getCookie('nova_sound_fx_preferences');
-                if (cookieValue) {
-                    try {
-                        return Object.assign(defaults, JSON.parse(decodeURIComponent(cookieValue)));
-                    } catch (e) {}
+            // Only load saved preferences if user has consented
+            if (this.settings.save_user_preferences) {
+                try {
+                    const saved = localStorage.getItem('nova_sound_fx_preferences');
+                    if (saved) {
+                        return Object.assign(defaults, JSON.parse(saved));
+                    }
+                } catch (e) {
+                    // Fallback a cookies si localStorage falla
+                    const cookieValue = this.getCookie('nova_sound_fx_preferences');
+                    if (cookieValue) {
+                        try {
+                            return Object.assign(defaults, JSON.parse(decodeURIComponent(cookieValue)));
+                        } catch (e) {}
+                    }
                 }
             }
             
@@ -1327,6 +1330,12 @@
          * Guardar preferencias del usuario
          */
         saveUserPreferences() {
+            // Check if user has consented to save preferences
+            if (!this.settings.save_user_preferences) {
+                // Don't save if user hasn't consented
+                return;
+            }
+            
             try {
                 localStorage.setItem('nova_sound_fx_preferences', JSON.stringify(this.userPreferences));
             } catch (e) {
