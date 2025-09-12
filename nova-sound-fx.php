@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Nova ImmersiSound
- * Plugin URI: https://github.com/yourusername/nova-immersisound
+ * Plugin URI: https://imstryker.com
  * Description: Add immersive sound effects to your WordPress site with CSS selectors and page transitions
- * Version: 1.1.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Version: 1.2.0
+ * Author: ImStryker
+ * Author URI: https://imstryker.com
  * License: GPL v2 or later
  * Text Domain: nova-sound-fx
  * Domain Path: /languages
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('NOVA_SOUND_FX_VERSION', '1.1.0');
+define('NOVA_SOUND_FX_VERSION', '1.2.0');
 define('NOVA_SOUND_FX_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('NOVA_SOUND_FX_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NOVA_SOUND_FX_PLUGIN_FILE', __FILE__);

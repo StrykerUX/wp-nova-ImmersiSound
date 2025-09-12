@@ -1,4 +1,4 @@
-# Nova Sound FX para WordPress
+# Nova ImmersiSound para WordPress
 
 [![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.0%2B-purple.svg)](https://php.net/)
@@ -148,6 +148,18 @@ Si los efectos hover de tu menú dejan de funcionar:
 ```
 
 ## 📝 Changelog
+
+### v1.2.0 (2024)
+- **Rebranding Completo**: El plugin ahora se llama Nova ImmersiSound
+- **Nuevo Sistema de Onboarding**: Wizard de configuración de 2 pasos que aparece en cada activación
+- **Compliance con WordPress.org**: Cumplimiento total de las 18 directrices oficiales de plugins
+- **Mejoras de Privacidad**: Sistema de consentimiento explícito para almacenamiento de datos
+- **Eliminación de Scripts Externos**: Removidos widgets de terceros para mejor seguridad y compliance
+- **Nueva Pestaña de Soporte**: Contenido emotivo y persuasivo para fomentar el apoyo comunitario
+- **Optimización UX**: Botón único en wizard para reducir fricción de usuario
+- **Notificaciones Mejoradas**: Tamaño reducido y mejor posicionamiento de toasts
+- **Corrección de Iconos**: Arreglado el icono de mute que mostraba incorrectamente
+- **Mejoras de Rendimiento**: Optimizaciones en el manejo de preferencias y audio consent
 
 ### v1.1.0 (2024)
 - **Nuevas Opciones de Visualización**: Control individual para efectos visuales e iconos de bocina
